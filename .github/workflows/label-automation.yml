@@ -1,8 +1,6 @@
 name: Label issues and PRs
 
-
 on:
-  workflow_dispatch: 
   issues:
     types: [opened, edited]
   pull_request:
