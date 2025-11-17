@@ -1,17 +1,30 @@
 
+# Python cache files
 __pycache__/
 *.py[cod]
 *$py.class
+
 # Environment files
 .env
 .env.*
 *.env
 .env.local
+
+# Virtual environments
 env/
 venv/
-ENV/
+ENV/git
 .venv/
+
+# Pydantic cache (used by FastAPI)
 .pydantic/
+
+# IDE / editor settings
 .vscode/
+
+# General cache
 *.cache
 .cache/
+
+# macOS system files
+.DS_Store
