@@ -1,0 +1,17 @@
+
+__pycache__/
+*.py[cod]
+*$py.class
+# Environment files
+.env
+.env.*
+*.env
+.env.local
+env/
+venv/
+ENV/
+.venv/
+.pydantic/
+.vscode/
+*.cache
+.cache/
