@@ -8,7 +8,7 @@ A simple **FastAPI** application to manage projects and related technology stack
 
 ## Tech Stack
 
-- **Python+**
+- **Python**
 - **FastAPI** – API framework
 - **SQLAlchemy** – ORM for database interaction
 - **PostgreSQL** – Relational database
