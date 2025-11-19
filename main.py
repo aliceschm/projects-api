@@ -14,7 +14,7 @@ class LangEnum(str, Enum):
     en = "en"
     es = "es"
 
-
+# pydantic model used for request validation and structure
 class ProjectBase(BaseModel):
     name: str
     about: Optional[str] = None
@@ -25,6 +25,7 @@ class ProjectBase(BaseModel):
     stacks: list[int] = [] 
     
 
+# dependency that creates and closes a db session per request
 def get_db():
     db = SessionLocal()
     try:
@@ -34,8 +35,9 @@ def get_db():
 
 db_dependency = Annotated[Session, Depends(get_db)]
 
-@app.get("/projects", response_model=list[ProjectBase])
+@app.get("/projects", response_model=list[ProjectBase]) # pydantic response_model to convert result to json
 async def get_all_projects(db:db_dependency):
+    # fetch all projects from database
     result = db.query(models.Projects).all()
     if not result:
         raise HTTPException(status_code=404, detail="No projects found.")
@@ -50,6 +52,7 @@ async def get_project(project_id: int, db:db_dependency):
 
 @app.post("/projects")
 async def create_projects(project:ProjectBase, db:db_dependency):
+    # create project using validated pydantic data
     db_project = models.Projects(
         name=project.name,
         about=project.about,
