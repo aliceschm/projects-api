@@ -14,7 +14,7 @@ class LangEnum(str, Enum):
     en = "en"
     es = "es"
 
-#table schemas
+
 class ProjectBase(BaseModel):
     name: str
     about: Optional[str] = None
@@ -33,6 +33,20 @@ def get_db():
         db.close()
 
 db_dependency = Annotated[Session, Depends(get_db)]
+
+@app.get("/projects", response_model=list[ProjectBase])
+async def get_all_projects(db:db_dependency):
+    result = db.query(models.Projects).all()
+    if not result:
+        raise HTTPException(status_code=404, detail="No projects found.")
+    return result
+
+@app.get("/projects/{project_id}")
+async def get_project(project_id: int, db:db_dependency):
+    result = db.query(models.Projects).filter(models.Projects.id == project_id).first()
+    if not result:
+        raise HTTPException(status_code=404, detail="Project not found.")
+    return result
 
 @app.post("/projects")
 async def create_projects(project:ProjectBase, db:db_dependency):
