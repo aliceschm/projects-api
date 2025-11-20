@@ -1,4 +1,5 @@
-from sqlalchemy import Text, CheckConstraint, Date, Column, ForeignKey, Integer, PrimaryKeyConstraint, TIMESTAMP, ARRAY, JSONB
+from sqlalchemy import Text, CheckConstraint, Date, Column, ForeignKey, Integer, PrimaryKeyConstraint, TIMESTAMP, ARRAY
+from sqlalchemy.dialects.postgresql import JSONB
 from database import Base
 from datetime import datetime
 
