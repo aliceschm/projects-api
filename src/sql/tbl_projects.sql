@@ -11,8 +11,9 @@ CREATE TYPE project_status AS ENUM (
 
 CREATE TABLE portfolio.projects (
   id          INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-  created_at  TIMESTAMP NOT NULL,
-  updated_at  TIMESTAMP NOT NULL,
+  created_at  TIMESTAMP NOT NULL DEFAULT NOW(),
+  updated_at  TIMESTAMP NOT NULL DEFAULT NOW(),
   status      project_status NOT NULL DEFAULT 'idea',
-  slug        TEXT NOT NULL
+  slug        TEXT UNIQUE NOT NULL,
+  deploy_date DATE
 );
