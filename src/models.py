@@ -1,8 +1,10 @@
+# Defines SQLAlchemy ORM models representing database tables.
+# These classes allow interaction with the database using Python objects instead of raw SQL.
+
 from sqlalchemy import Text, CheckConstraint, Date, Column, ForeignKey, Integer, PrimaryKeyConstraint, TIMESTAMP, ARRAY
 from sqlalchemy.dialects.postgresql import JSONB
-from database import Base
+from src.database import Base
 from datetime import datetime
-
 
 class Projects(Base):
     __tablename__ = 'projects'
@@ -17,6 +19,7 @@ class Projects(Base):
     updated_at = Column(TIMESTAMP, nullable=False, default=datetime.now, onupdate=datetime.now)
     status = Column(Text, nullable=False, server_default="idea")
     slug = Column(Text, nullable=False)
+    deploy_date = Column(Date, nullable=True)
 
 class ProjectDesc(Base):
     __tablename__ = "project_desc"
@@ -53,13 +56,9 @@ class ProjectView(Base):
     __tablename__ = "project_view"
     __table_args__ = {"schema": "portfolio"}
 
-    # Precisa marcar a PK lógica
     id = Column(Integer, primary_key=True)
-
     date = Column(TIMESTAMP)
     status = Column(Text)
-
     stack_ids = Column(ARRAY(Integer))
     stack_names = Column(ARRAY(Text))
-
     translations = Column(JSONB)
