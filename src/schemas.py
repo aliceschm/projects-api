@@ -7,6 +7,9 @@ from typing import List, Dict, Optional
 from enum import Enum
 from datetime import date
 
+class ProjectLang(str, Enum):
+    pt = "pt"
+    en = "en"
 
 class ProjectStatus(str, Enum):
     idea = "idea"
@@ -17,7 +20,7 @@ class ProjectStatus(str, Enum):
     archived = "archived"
 
 class ProjectDescCreate(BaseModel):
-    lang: str
+    lang: ProjectLang
     name: str
     about: Optional[str] = None
     full_desc: Optional[str] = None
@@ -30,6 +33,6 @@ class ProjectCreate(BaseModel):
     #stacks
     stacks: List[str]           
     #table project_desc fields
-    descriptions: ProjectDescCreate
+    descriptions: List[ProjectDescCreate]
 
 
