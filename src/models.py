@@ -41,6 +41,7 @@ class Stacks(Base):
 
     id = Column(Integer, primary_key=True, autoincrement=True)
     name = Column(Text, nullable=False)
+    name_normalized = Column(Text, nullable=False)
 
 class ProjectStack(Base):
     __tablename__ = 'project_stack'
