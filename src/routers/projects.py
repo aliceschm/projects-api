@@ -19,14 +19,14 @@ def create_project(project: ProjectCreate, db: db_dependency):
     new_project = project_service.create_project(project, db)
     return new_project
 
-# #read project
-# @router.get("/{project_id}")
-# def read_project(db: db_dependency, project_id: int):
-#     result_project = project_service.read_project(db, project_id)
-#     return result_project
-
+#read projects
 @router.get("/", response_model=List[ProjectOut])
 def read_all_projects(db: db_dependency):
    result_projects = project_service.read_all_projects(db)
    return result_projects
 
+#read project
+@router.get("/{project_id}")
+def read_project(project_id: int, db: db_dependency):
+    result_project = project_service.read_project(project_id, db)
+    return result_project

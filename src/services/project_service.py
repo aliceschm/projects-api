@@ -53,6 +53,11 @@ def create_project(project: ProjectCreate, db: Session):
     return db_project
 
 # Read projects
-def read_all_projects(db:Session):
+def read_all_projects(db :Session):
     projects = db.query(models.ProjectView).all()
     return projects
+
+# Read project
+def read_project(project_id: int, db: Session):
+    project = db.query(models.ProjectView).filter(models.ProjectView.id == project_id).first()
+    return project
