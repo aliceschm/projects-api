@@ -5,7 +5,8 @@ from src import models
 from src.schemas import ProjectCreate
 from src.services.stack_service import get_or_create_stack
 
-
+# CRUD - PROJECT
+# Create_project
 def create_project(project: ProjectCreate, db: Session):
     """
     Service layer:
@@ -50,3 +51,8 @@ def create_project(project: ProjectCreate, db: Session):
     db.refresh(db_project)
 
     return db_project
+
+# Read projects
+def read_all_projects(db:Session):
+    projects = db.query(models.ProjectView).all()
+    return projects
