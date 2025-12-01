@@ -58,7 +58,8 @@ class ProjectView(Base):
     __table_args__ = {"schema": "portfolio"}
 
     id = Column(Integer, primary_key=True)
-    date = Column(TIMESTAMP)
+    updated_at = Column(TIMESTAMP)
+    deploy_date = Column(Date)
     status = Column(Text)
     stack_ids = Column(ARRAY(Integer))
     stack_names = Column(ARRAY(Text))

@@ -4,7 +4,8 @@
 CREATE OR REPLACE VIEW portfolio.project_view AS
 SELECT 
     p.id,
-    p.updated_at AS date,
+    p.updated_at,
+    p.deploy_date,
     p.status,
     array_agg(DISTINCT s.id)          AS stack_ids,
     array_agg(DISTINCT s.name)        AS stack_names,
