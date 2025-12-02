@@ -30,3 +30,4 @@ def read_all_projects(db: db_dependency):
 def read_project(project_id: int, db: db_dependency):
     result_project = project_service.read_project(project_id, db)
     return result_project
+
