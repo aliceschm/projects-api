@@ -40,7 +40,7 @@ class ProjectOut(BaseModel):
     id: int
     deploy_date: Optional[date] = None
     status: str
-    stack_names: Optional[List[str]] = None
+    stack_names: Optional[List[str]] = Field(default_factory=list)
     translations: Optional[Dict[str, Optional[Dict[str, Any]]]] = None
 
     model_config = {
@@ -61,6 +61,6 @@ class ProjectPatch(BaseModel):
     deploy_date: Optional[date] = None
 
     description: Optional[ProjectDescPatch] = None
-    stacks: Optional[List[str]] = None
+    stacks: Optional[List[str]] = None 
 
     model_config = {"extra": "forbid"}
