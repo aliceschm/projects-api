@@ -36,3 +36,8 @@ def read_project(project_id: int, db: db_dependency):
 def patch_project(project_id: int, patch: ProjectPatch, db: db_dependency):
     updated_project = projects_service.patch_project(project_id, patch, db)
     return updated_project
+
+#delete project
+@router.delete("/{project_id}")
+def delete_project(project_id: int, db: db_dependency):
+    projects_service.delete_project(project_id, db)

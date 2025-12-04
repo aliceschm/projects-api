@@ -74,8 +74,7 @@ def update_project_base(db, project, patch):
 
     db.flush()
 
-# Update project
-
+# Update project (partial)
 def patch_project(project_id: int, patch: ProjectPatch, db: Session):
     project = (
         db.query(models.Projects)
@@ -106,3 +105,17 @@ def patch_project(project_id: int, patch: ProjectPatch, db: Session):
           .first()
     )
     return updated_project
+
+# Delete project
+def delete_project(project_id: int, db: Session):
+    project = (
+        db.query(models.Projects)
+          .filter(models.Projects.id == project_id)
+          .first()
+    )
+
+    if not project:
+        raise HTTPException(status_code=404, detail="Project not found")
+
+    db.delete(project)
+    db.commit()
