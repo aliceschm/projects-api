@@ -41,3 +41,25 @@ class ProjectOut(BaseModel):
     status: str
     stack_names: Optional[List[str]] | None = None
     translations: Optional[Dict[str, Optional[Dict[str, Any]]]] = None
+
+    model_config = {
+        "from_attributes": True 
+    }
+
+class ProjectDescPatch(BaseModel):
+    lang: str
+    name: Optional[str] = None
+    about: Optional[str] = None
+    full_desc: Optional[str] = None
+
+    model_config = {"extra": "forbid"}
+
+class ProjectPatch(BaseModel):
+    status: Optional[str] = None
+    slug: Optional[str] = None
+    deploy_date: Optional[date] = None
+
+    description: Optional[ProjectDescPatch] = None
+    stacks: Optional[List[str]] = None
+
+    model_config = {"extra": "forbid"}

@@ -1,9 +1,11 @@
-# All project services
+# Services related to projects table in the db
 from sqlalchemy.orm import Session
 from datetime import datetime
 from src import models
-from src.schemas import ProjectCreate
-from src.services.stack_service import get_or_create_stack
+from src.schemas import ProjectCreate, ProjectDescPatch, ProjectPatch
+from src.services.stacks_service import get_or_create_stack, update_project_stacks
+from src.services.project_desc_service import update_project_desc
+from fastapi import HTTPException
 
 # CRUD - PROJECT
 # Create_project
@@ -61,3 +63,46 @@ def read_all_projects(db :Session):
 def read_project(project_id: int, db: Session):
     project = db.query(models.ProjectView).filter(models.ProjectView.id == project_id).first()
     return project
+
+# Update projects table
+def update_project_base(db, project, patch):
+    data = patch.model_dump(exclude_unset=True)
+
+    for field in ("status", "slug", "deploy_date"):
+        if field in data:
+            setattr(project, field, data[field])
+
+    db.flush()
+
+# Update project
+
+def patch_project(project_id: int, patch: ProjectPatch, db: Session):
+    project = (
+        db.query(models.Projects)
+          .filter(models.Projects.id == project_id)
+          .first()
+    )
+
+    if not project:
+        raise HTTPException(status_code=404, detail="Project not found")
+
+    # Update main table
+    update_project_base(db, project, patch)
+
+    # Update description: create/update/remove
+    if patch.description is not None:
+        update_project_desc(db, project_id, patch.description)
+
+    # Update stacks
+    if patch.stacks is not None:
+        update_project_stacks(db, project_id, patch.stacks)
+
+    db.commit()
+    db.refresh(project)
+
+    updated_project = (
+        db.query(models.ProjectView)
+          .filter(models.ProjectView.id == project_id)
+          .first()
+    )
+    return updated_project
