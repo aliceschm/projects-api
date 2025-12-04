@@ -1,5 +1,4 @@
-/* Table with list of projects */
-
+-- Table with list of projects 
 CREATE TYPE project_status AS ENUM (
   'idea',
   'planning',

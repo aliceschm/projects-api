@@ -1,4 +1,4 @@
-/* Table with list of stacks */
+-- Table with list of stacks 
 
 CREATE TABLE portfolio.stacks (
     id SERIAL PRIMARY KEY,

@@ -1,5 +1,4 @@
-/* View to display all project details */
-/* API */
+-- View to display all project details
 
 CREATE OR REPLACE VIEW portfolio.project_view AS
 SELECT 
