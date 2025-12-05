@@ -1,4 +1,4 @@
-/* Table that links each project to each stack */
+-- Table that links each project to each stack 
 
 CREATE TABLE portfolio.project_stack (
   project_id  INTEGER NOT NULL REFERENCES portfolio.projects(id) ON DELETE CASCADE,

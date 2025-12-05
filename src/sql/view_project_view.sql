@@ -1,5 +1,4 @@
-/* View to display all project details */
-/* API */
+-- View to display all project details
 
 CREATE OR REPLACE VIEW portfolio.project_view AS
 SELECT 
@@ -7,8 +6,8 @@ SELECT
     p.updated_at,
     p.deploy_date,
     p.status,
-    array_agg(DISTINCT s.id)          AS stack_ids,
-    array_agg(DISTINCT s.name)        AS stack_names,
+    COALESCE(array_agg(DISTINCT s.id) FILTER (WHERE s.id IS NOT NULL), '{}')   AS stack_ids,
+    COALESCE(array_agg(DISTINCT s.name) FILTER (WHERE s.name IS NOT NULL), '{}') AS stack_names,
     jsonb_object_agg(
         pd.lang,
         jsonb_build_object(
@@ -28,4 +27,3 @@ GROUP BY
     p.id, 
     p.updated_at,
     p.status;
-

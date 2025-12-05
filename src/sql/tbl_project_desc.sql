@@ -1,4 +1,4 @@
-/* Table with project details for each language*/
+ -- Table with project details for each language
 
 CREATE TABLE portfolio.project_desc (
   project_id  INTEGER NOT NULL REFERENCES portfolio.projects(id) ON DELETE CASCADE,

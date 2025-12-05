@@ -2,7 +2,7 @@
 # They ensure that input data sent to the API is valid and that responses have a consistent format.
 # Schemas are separate from ORM models to decouple database structure from API interface.
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from typing import List, Dict, Optional, Any
 from enum import Enum
 from datetime import date
@@ -22,24 +22,25 @@ class ProjectStatus(str, Enum):
 class ProjectDescCreate(BaseModel):
     lang: ProjectLang
     name: str
-    about: Optional[str] | None = None
-    full_desc: Optional[str] | None = None
+    about: Optional[str] = None
+    full_desc: Optional[str] = None
 
 class ProjectCreate(BaseModel):
     #table projects fields
     status: ProjectStatus
     slug: str
-    deploy_date: Optional[date] | None = None
+    deploy_date: Optional[date] = None
     #stacks
-    stacks: List[str]           
-    #table project_desc fields
-    descriptions: List[ProjectDescCreate]
+    stacks: Optional[List[str]] = Field(default_factory=list) #if field is not received its viewed as empty list - avoid  'NoneType' object is not iterable
+    #project_desc table
+    descriptions: List[ProjectDescCreate] = Field(..., min_items=1) #guarantee list is not received empty
+
 
 class ProjectOut(BaseModel):
     id: int
-    deploy_date: Optional[date] | None = None
+    deploy_date: Optional[date] = None
     status: str
-    stack_names: Optional[List[str]] | None = None
+    stack_names: Optional[List[str]] = Field(default_factory=list)
     translations: Optional[Dict[str, Optional[Dict[str, Any]]]] = None
 
     model_config = {
@@ -60,6 +61,6 @@ class ProjectPatch(BaseModel):
     deploy_date: Optional[date] = None
 
     description: Optional[ProjectDescPatch] = None
-    stacks: Optional[List[str]] = None
+    stacks: Optional[List[str]] = None 
 
     model_config = {"extra": "forbid"}

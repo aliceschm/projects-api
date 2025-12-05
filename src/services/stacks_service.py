@@ -31,7 +31,7 @@ def update_project_stacks(db, project_id: int, stack_names: list[str]):
     cleaned_names = {name.strip() for name in stack_names if name and name.strip()}
     cleaned_names = list(cleaned_names)
 
-    # Stacks atuais
+    # Existing stacks
     existing = (
         db.query(models.ProjectStack.stack_id)
           .filter(models.ProjectStack.project_id == project_id)
@@ -39,7 +39,7 @@ def update_project_stacks(db, project_id: int, stack_names: list[str]):
     )
     existing_ids = {row.stack_id for row in existing}
 
-    # Garantir existência das stacks (criar se não existir)
+    # Create stacks if they don't exist
     new_stack_objs = []
     for name in cleaned_names:
         stack_obj = get_or_create_stack(db, name)
@@ -47,15 +47,15 @@ def update_project_stacks(db, project_id: int, stack_names: list[str]):
 
     new_ids = {s.id for s in new_stack_objs}
 
-    # Calcular delta
+    # Calculate stacks to add and stacks to be removed
     to_add = new_ids - existing_ids
     to_remove = existing_ids - new_ids
 
-    # Inserir
+    # Insert new stacks
     for stack_id in to_add:
         db.add(models.ProjectStack(project_id=project_id, stack_id=stack_id))
 
-    # Remover
+    # Remove unused stacks (missing from new input list)
     if to_remove:
         db.query(models.ProjectStack).filter(
             models.ProjectStack.project_id == project_id,
