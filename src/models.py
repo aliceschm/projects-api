@@ -24,12 +24,12 @@ class Projects(Base):
 class ProjectDesc(Base):
     __tablename__ = "project_desc"
     __table_args__ = (
-        PrimaryKeyConstraint("project_id", "lang"),
+        PrimaryKeyConstraint("id", "lang"),
         CheckConstraint("lang IN ('pt', 'en', 'es')", name="lang_check"),
         {"schema": "portfolio"},
     )
 
-    project_id = Column(Integer, ForeignKey("portfolio.projects.id", ondelete="CASCADE"))
+    id = Column(Integer, ForeignKey("portfolio.projects.id", ondelete="CASCADE"))
     name = Column(Text, nullable=False, server_default="")
     about = Column(Text)
     full_desc = Column(Text)
@@ -52,15 +52,3 @@ class ProjectStack(Base):
 
     project_id = Column(Integer, ForeignKey("portfolio.projects.id", ondelete="CASCADE"))
     stack_id = Column(Integer, ForeignKey("portfolio.stacks.id"))
-
-class ProjectView(Base):
-    __tablename__ = "project_view"
-    __table_args__ = {"schema": "portfolio"}
-
-    id = Column(Integer, primary_key=True)
-    updated_at = Column(TIMESTAMP)
-    deploy_date = Column(Date)
-    status = Column(Text)
-    stack_ids = Column(ARRAY(Integer))
-    stack_names = Column(ARRAY(Text))
-    translations = Column(JSONB)
