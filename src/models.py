@@ -2,6 +2,7 @@
 # These classes allow interaction with the database using Python objects instead of raw SQL.
 
 from sqlalchemy import Text, CheckConstraint, Date, Column, ForeignKey, Integer, PrimaryKeyConstraint, TIMESTAMP, ARRAY
+from sqlalchemy.orm import relationship
 from sqlalchemy.dialects.postgresql import JSONB
 from src.database import Base
 from datetime import datetime
@@ -21,6 +22,19 @@ class Projects(Base):
     slug = Column(Text, nullable=False)
     deploy_date = Column(Date, nullable=True)
 
+    descriptions = relationship("ProjectDesc",
+        back_populates="project",
+        cascade="all, delete-orphan",
+        lazy="selectin"
+    )
+
+    stacks = relationship(
+        "Stacks",
+        secondary="portfolio.project_stack",
+        back_populates="projects",
+        lazy="selectin",
+    )
+
 class ProjectDesc(Base):
     __tablename__ = "project_desc"
     __table_args__ = (
@@ -35,6 +49,12 @@ class ProjectDesc(Base):
     full_desc = Column(Text)
     lang = Column(Text, nullable=False, server_default="pt")
 
+    project = relationship(
+        "Projects",
+        back_populates="descriptions"
+        lazy= "selectin"
+    )
+
 class Stacks(Base):
     __tablename__ = 'stacks'
     __table_args__ = {"schema": "portfolio"}
@@ -42,6 +62,15 @@ class Stacks(Base):
     id = Column(Integer, primary_key=True, autoincrement=True)
     name = Column(Text, nullable=False)
     name_normalized = Column(Text, nullable=False)
+
+    projects = relationship(
+        "Projects",
+        secondary="portfolio.project_stack",
+        back_populates="stacks",
+        lazy="selectin",
+    )
+
+
 
 class ProjectStack(Base):
     __tablename__ = 'project_stack'
