@@ -38,14 +38,29 @@ class ProjectCreate(BaseModel):
 
 class ProjectOut(BaseModel):
     id: int
-    deploy_date: Optional[date] = None
-    status: str
+    slug: str
+    name: str
+    about: Optional[str] = None
     stack_names: Optional[List[str]] = Field(default_factory=list)
-    translations: Optional[Dict[str, Optional[Dict[str, Any]]]] = None
 
     model_config = {
         "from_attributes": True 
     }
+
+class ProjectDetailOut(BaseModel):
+    id: int
+    lang: ProjectLang
+    slug: str
+    deploy_date: Optional[date] = None
+    status: str
+    stack_names: Optional[List[str]] = Field(default_factory=list)
+    full_desc: Optional[str] = None
+
+
+    model_config = {
+        "from_attributes": True 
+    }
+    
 
 class ProjectDescPatch(BaseModel):
     lang: str

@@ -51,7 +51,7 @@ class ProjectDesc(Base):
 
     project = relationship(
         "Projects",
-        back_populates="descriptions"
+        back_populates="descriptions",
         lazy= "selectin"
     )
 
