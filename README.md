@@ -1,6 +1,6 @@
 # Projects API
 
-A RESTful API built with **FastAPI** to manage portfolio projects and their related technology stacks, with a strong focus on **clean architecture**, **separation of concerns**, and **backend best practices**.
+A REST API built with **FastAPI** to manage portfolio projects and their related technology stacks, with a strong focus on **clean architecture**, **separation of concerns**, and **backend best practices**.
 
 ---
 
