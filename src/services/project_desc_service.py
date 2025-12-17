@@ -11,7 +11,7 @@ def update_project_desc(db, project_id: int, desc_patch):
     desc = (
         db.query(models.ProjectDesc)
         .filter(
-            models.ProjectDesc.project_id == project_id,
+            models.ProjectDesc.id == project_id,
             models.ProjectDesc.lang == lang
         )
         .first()
@@ -32,7 +32,7 @@ def update_project_desc(db, project_id: int, desc_patch):
 
     # Create if it doesn't exist
     if not desc:
-        desc = models.ProjectDesc(project_id=project_id, lang=lang)
+        desc = models.ProjectDesc(id=project_id, lang=lang)
         db.add(desc)
         db.flush()
 

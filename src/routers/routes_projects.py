@@ -6,8 +6,9 @@ from typing import List, Annotated
 import datetime
 from src import models
 from src.database import get_db
-from src.schemas import ProjectCreate, ProjectOut, ProjectPatch
+from src.schemas import ProjectCreate, ProjectOut, ProjectPatch, ProjectOut, ProjectDetailOut
 from src.services import projects_service
+from src.domain.language import get_language
 
 db_dependency = Annotated[Session, Depends(get_db)]
 
@@ -21,23 +22,23 @@ def create_project(project: ProjectCreate, db: db_dependency):
 
 #read projects
 @router.get("/", status_code = status.HTTP_200_OK, response_model = List[ProjectOut])
-def read_all_projects(db: db_dependency):
-   result_projects = projects_service.read_all_projects(db)
+def read_all_projects(db: db_dependency, lang: str = Depends(get_language)):
+   result_projects = projects_service.read_all_projects(db, lang)
    return result_projects
 
 #read project
-@router.get("/{project_id}", status_code = status.HTTP_200_OK, response_model = ProjectOut)
-def read_project(project_id: int, db: db_dependency):
-    result_project = projects_service.read_project(project_id, db)
+@router.get("/{project_id}", status_code = status.HTTP_200_OK, response_model = ProjectDetailOut)
+def read_project(db: db_dependency, project_id: int, lang: str = Depends(get_language)):
+    result_project = projects_service.read_project_by_id(db, project_id, lang)
     return result_project
 
 #update project
 @router.patch("/{project_id}", status_code = status.HTTP_200_OK)
-def patch_project(project_id: int, patch: ProjectPatch, db: db_dependency):
-    updated_project = projects_service.patch_project(project_id, patch, db)
+def patch_project(db: db_dependency, project_id: int, patch: ProjectPatch):
+    updated_project = projects_service.patch_project(db, project_id, patch)
     return updated_project
 
 #delete project
 @router.delete("/{project_id}", status_code = status.HTTP_204_NO_CONTENT)
-def delete_project(project_id: int, db: db_dependency):
-    projects_service.delete_project(project_id, db)
+def delete_project(db: db_dependency, project_id: int):
+    projects_service.delete_project(db, project_id)

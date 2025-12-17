@@ -1,4 +1,4 @@
--- View to display all project details
+-- View to display all project details - NOT being used in API services
 
 CREATE OR REPLACE VIEW portfolio.project_view AS
 SELECT 
