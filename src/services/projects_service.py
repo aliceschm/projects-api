@@ -59,6 +59,7 @@ def create_project(db: Session, project: ProjectCreate):
     db.commit()
     db.refresh(db_project)
 
+    #Return full project aggregate for CMS usage
     return db_project
 
 # Read projects
@@ -108,7 +109,7 @@ def read_project_by_id(db: Session, project_id: int, lang: str):
     )
 
     if not project:
-        return None  
+        raise ProjectNotFoundError()
 
     # Get desc in the requested language
     desc = next((d for d in project.descriptions if d.lang == lang), None)
@@ -158,9 +159,9 @@ def patch_project(db: Session, project_id: int, patch: ProjectPatch):
         update_project_stacks(db, project_id, patch.stacks)
 
     db.commit()
-    db.refresh(project)
 
-    return project
+    #Return full project aggregate for CMS usage
+    return project 
 
 # Delete project
 def delete_project(db: Session, project_id: int):
