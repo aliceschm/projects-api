@@ -1,7 +1,7 @@
 from datetime import datetime
 from sqlalchemy.orm import Session
 from src import models
-from exceptions import InvalidDeployDateError, InvalidStatusError, SlugAlreadyExistsError
+from src.domain.exceptions import InvalidDeployDateError, InvalidStatusError, SlugAlreadyExistsError
 
 
 def validate_deploy_date(deploy_date):
