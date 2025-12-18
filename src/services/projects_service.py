@@ -2,11 +2,11 @@
 from sqlalchemy.orm import Session, joinedload
 from datetime import datetime
 from src import models
-from src.schemas import ProjectCreate, ProjectDescPatch, ProjectPatch, ProjectStatus, ProjectOut, ProjectDetailOut
+from src.schemas import ProjectCreate, ProjectPatch, ProjectStatus, ProjectOut, ProjectDetailOut
 from src.services.stacks_service import get_or_create_stack, update_project_stacks
 from src.services.project_desc_service import update_project_desc
-from fastapi import HTTPException
 from src.domain.project_validations import validate_deploy_date, validate_slug_unique, validate_status
+from src.domain.exceptions import ProjectNotFoundError
 
 
 # CRUD - PROJECT
@@ -108,9 +108,9 @@ def read_project_by_id(db: Session, project_id: int, lang: str):
     )
 
     if not project:
-        return None  # ou raise HTTPException(status_code=404, ...)
+        return None  
 
-    # Pega a descrição no idioma solicitado
+    # Get desc in the requested language
     desc = next((d for d in project.descriptions if d.lang == lang), None)
 
     return ProjectDetailOut(
@@ -138,7 +138,7 @@ def patch_project(db: Session, project_id: int, patch: ProjectPatch):
     project = db.query(models.Projects).filter(models.Projects.id == project_id).first()
 
     if not project:
-        raise HTTPException(status_code=404, detail="Project not found")
+        raise ProjectNotFoundError()
   
     # Logic validations
     if patch.deploy_date is not None:
@@ -175,7 +175,7 @@ def delete_project(db: Session, project_id: int):
     )
 
     if not project:
-        raise HTTPException(status_code=404, detail="Project not found")
+        raise ProjectNotFoundError()
 
     db.delete(project)
     db.commit()
