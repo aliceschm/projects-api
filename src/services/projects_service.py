@@ -2,11 +2,11 @@
 from sqlalchemy.orm import Session, joinedload
 from datetime import datetime
 from src import models
-from src.schemas import ProjectCreate, ProjectDescPatch, ProjectPatch, ProjectStatus, ProjectOut, ProjectDetailOut
+from src.schemas import ProjectCreate, ProjectPatch, ProjectStatus, ProjectOut, ProjectDetailOut
 from src.services.stacks_service import get_or_create_stack, update_project_stacks
 from src.services.project_desc_service import update_project_desc
-from fastapi import HTTPException
 from src.domain.project_validations import validate_deploy_date, validate_slug_unique, validate_status
+from src.domain.exceptions import ProjectNotFoundError
 
 
 # CRUD - PROJECT
@@ -59,6 +59,7 @@ def create_project(db: Session, project: ProjectCreate):
     db.commit()
     db.refresh(db_project)
 
+    #Return full project aggregate for CMS usage
     return db_project
 
 # Read projects
@@ -108,9 +109,9 @@ def read_project_by_id(db: Session, project_id: int, lang: str):
     )
 
     if not project:
-        return None  # ou raise HTTPException(status_code=404, ...)
+        raise ProjectNotFoundError()
 
-    # Pega a descrição no idioma solicitado
+    # Get desc in the requested language
     desc = next((d for d in project.descriptions if d.lang == lang), None)
 
     return ProjectDetailOut(
@@ -123,22 +124,12 @@ def read_project_by_id(db: Session, project_id: int, lang: str):
         full_desc=desc.full_desc if desc and desc.full_desc else None
     )
 
-# Update projects table
-def update_project_base(db: Session, project, patch):
-    data = patch.model_dump(exclude_unset=True)
-
-    for field in ("status", "slug", "deploy_date"):
-        if field in data:
-            setattr(project, field, data[field])
-
-    db.flush()
-
 # Update project (partial)
 def patch_project(db: Session, project_id: int, patch: ProjectPatch):
     project = db.query(models.Projects).filter(models.Projects.id == project_id).first()
 
     if not project:
-        raise HTTPException(status_code=404, detail="Project not found")
+        raise ProjectNotFoundError()
   
     # Logic validations
     if patch.deploy_date is not None:
@@ -154,17 +145,23 @@ def patch_project(db: Session, project_id: int, patch: ProjectPatch):
     if patch.description is not None:
         update_project_desc(db, project_id, patch.description)
 
-    # Update main table
-    update_project_base(db, project, patch)
+    # Update main table (projects)
+    data = patch.model_dump(exclude_unset=True)
+
+    for field in ("status", "slug", "deploy_date"):
+        if field in data:
+            setattr(project, field, data[field])
+
+    db.flush()
     
     # Update stacks
     if patch.stacks is not None:
         update_project_stacks(db, project_id, patch.stacks)
 
     db.commit()
-    db.refresh(project)
 
-    return project
+    #Return full project aggregate for CMS usage
+    return project 
 
 # Delete project
 def delete_project(db: Session, project_id: int):
@@ -175,7 +172,7 @@ def delete_project(db: Session, project_id: int):
     )
 
     if not project:
-        raise HTTPException(status_code=404, detail="Project not found")
+        raise ProjectNotFoundError()
 
     db.delete(project)
     db.commit()

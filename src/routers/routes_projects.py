@@ -1,10 +1,8 @@
 # All endpoints related to projects
 
-from fastapi import APIRouter, Depends, status
+from fastapi import APIRouter, Depends, status, Response
 from sqlalchemy.orm import Session
 from typing import List, Annotated
-import datetime
-from src import models
 from src.database import get_db
 from src.schemas import ProjectCreate, ProjectOut, ProjectPatch, ProjectOut, ProjectDetailOut
 from src.services import projects_service
@@ -16,8 +14,9 @@ router = APIRouter(prefix="/projects", tags=["Projects"])
 
 #create project
 @router.post("/", status_code = status.HTTP_201_CREATED)
-def create_project(project: ProjectCreate, db: db_dependency):
-    new_project = projects_service.create_project(project, db)
+def create_project(db: db_dependency, project: ProjectCreate, response: Response):
+    new_project = projects_service.create_project(db, project)
+    response.headers["Location"] = f"/projects/{new_project.id}"
     return new_project
 
 #read projects
@@ -34,8 +33,9 @@ def read_project(db: db_dependency, project_id: int, lang: str = Depends(get_lan
 
 #update project
 @router.patch("/{project_id}", status_code = status.HTTP_200_OK)
-def patch_project(db: db_dependency, project_id: int, patch: ProjectPatch):
+def patch_project(db: db_dependency, project_id: int, patch: ProjectPatch, response: Response):
     updated_project = projects_service.patch_project(db, project_id, patch)
+    response.headers["Location"] = f"/projects/{updated_project.id}"
     return updated_project
 
 #delete project
