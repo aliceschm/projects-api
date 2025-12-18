@@ -123,16 +123,6 @@ def read_project_by_id(db: Session, project_id: int, lang: str):
         full_desc=desc.full_desc if desc and desc.full_desc else None
     )
 
-# Update projects table
-def update_project_base(db: Session, project, patch):
-    data = patch.model_dump(exclude_unset=True)
-
-    for field in ("status", "slug", "deploy_date"):
-        if field in data:
-            setattr(project, field, data[field])
-
-    db.flush()
-
 # Update project (partial)
 def patch_project(db: Session, project_id: int, patch: ProjectPatch):
     project = db.query(models.Projects).filter(models.Projects.id == project_id).first()
@@ -154,8 +144,14 @@ def patch_project(db: Session, project_id: int, patch: ProjectPatch):
     if patch.description is not None:
         update_project_desc(db, project_id, patch.description)
 
-    # Update main table
-    update_project_base(db, project, patch)
+    # Update main table (projects)
+    data = patch.model_dump(exclude_unset=True)
+
+    for field in ("status", "slug", "deploy_date"):
+        if field in data:
+            setattr(project, field, data[field])
+
+    db.flush()
     
     # Update stacks
     if patch.stacks is not None:
