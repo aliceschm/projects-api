@@ -1,0 +1,29 @@
+# Python cache
+
+**pycache**/
+_.pyc
+_.pyo
+
+# Virtual environments
+
+.venv/
+venv/
+env/
+
+# OS junk
+
+.DS_Store
+
+# Git
+
+.git/
+.gitignore
+
+# IDE
+
+.vscode/
+
+# Local configs
+
+.env
+.env.\*
