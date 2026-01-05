@@ -66,6 +66,7 @@ def create_project(db: Session, project: ProjectCreate):
 def read_all_projects(db: Session, lang: str = "pt"):
     projects = (
         db.query(models.Projects)
+        .filter(models.Projects.status == "published")
         .options(
             joinedload(models.Projects.descriptions),
             joinedload(models.Projects.stacks),
@@ -100,6 +101,7 @@ def read_all_projects(db: Session, lang: str = "pt"):
 def read_project_by_id(db: Session, project_id: int, lang: str):
     project = (
         db.query(models.Projects)
+        .filter(models.Projects.status == "published")
         .options(
             joinedload(models.Projects.descriptions),
             joinedload(models.Projects.stacks)
