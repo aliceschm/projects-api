@@ -18,6 +18,7 @@ class ProjectStatus(str, Enum):
     paused = "paused"
     finished = "finished"
     archived = "archived"
+    published = "published"
 
 class ProjectDescCreate(BaseModel):
     lang: ProjectLang

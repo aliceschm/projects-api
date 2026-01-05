@@ -5,7 +5,8 @@ CREATE TYPE project_status AS ENUM (
   'in_progress',
   'paused',
   'finished',
-  'archived'
+  'archived',
+  'published'
 );
 
 CREATE TABLE portfolio.projects (
