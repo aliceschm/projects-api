@@ -1,12 +1,13 @@
 from fastapi import FastAPI
-from src.routers import routes_projects
+from src.routers.projects import admin, public
 from fastapi.responses import JSONResponse
 from src.domain.exceptions import InvalidDeployDateError,SlugAlreadyExistsError, InvalidStatusError, ProjectNotFoundError
 
 
 app = FastAPI()
 
-app.include_router(routes_projects.router)
+app.include_router(admin.router)
+app.include_router(public.router)
 
 @app.get("/")
 def root():
