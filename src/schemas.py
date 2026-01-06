@@ -76,7 +76,7 @@ class ProjectPatch(BaseModel):
     slug: Optional[str] = None
     deploy_date: Optional[date] = None
 
-    description: Optional[ProjectDescPatch] = None
+    descriptions: Optional[List[ProjectDescPatch]] = None
     stacks: Optional[List[str]] = None 
 
     model_config = {"extra": "forbid"}
