@@ -37,7 +37,7 @@ def validate_project_publishable(project):
     if not project.stacks:
         errors.append("at least one stack is required for published projects")
 
-    desc_by_lang = {d.language: d for d in project.descriptions}
+    desc_by_lang = {d.lang: d for d in project.descriptions}
     missing_langs = REQUIRED_LANGS - desc_by_lang.keys()
 
     if missing_langs:
