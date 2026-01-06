@@ -5,7 +5,7 @@ from src import models
 from src.schemas import ProjectCreate, ProjectPatch, ProjectStatus, ProjectOut, ProjectDetailOut
 from src.services.stacks_service import get_or_create_stack, update_project_stacks
 from src.services.project_desc_service import update_project_desc
-from src.domain.project_validations import validate_deploy_date, validate_slug_unique, validate_status
+from src.domain.project_rules import validate_deploy_date, validate_slug_unique, validate_status, validate_project_publishable
 from src.domain.exceptions import ProjectNotFoundError
 
 
@@ -141,11 +141,11 @@ def patch_project(db: Session, project_id: int, patch: ProjectPatch):
         validate_status(patch.status, ProjectStatus)
 
     if patch.slug is not None:
-        validate_slug_unique(db, patch.slug)
+        validate_slug_unique(db, patch.slug, project_id)
 
     # Update description: create/update/remove
-    if patch.description is not None:
-        update_project_desc(db, project_id, patch.description)
+    if patch.descriptions is not None:
+        update_project_desc(db, project_id, patch.descriptions)
 
     # Update main table (projects)
     data = patch.model_dump(exclude_unset=True)
@@ -178,3 +178,26 @@ def delete_project(db: Session, project_id: int):
 
     db.delete(project)
     db.commit()
+
+# Publish project
+def publish_project(db: Session, project_id:int):
+    project = (
+        db.query(models.Projects)
+        .filter(models.Projects.id == project_id)
+        .first()
+    )
+
+    if not project:
+        raise ProjectNotFoundError()
+    
+    validate_project_publishable(project)
+    
+    project.status = ProjectStatus.PUBLISHED
+
+    db.commit()
+    db.refresh(project)
+
+    return project
+    
+
+
