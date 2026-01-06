@@ -14,6 +14,7 @@ def validate_deploy_date(deploy_date):
 
 
 def validate_slug_unique(db: Session, slug: str, project_id: int | None = None):
+    #validate if slug exists in project create and project patch
     query = db.query(models.Projects).filter(models.Projects.slug == slug)
 
     if project_id:
