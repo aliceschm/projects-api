@@ -10,7 +10,7 @@ from src.auth.dependencies import require_api_key
 
 db_dependency = Annotated[Session, Depends(get_db)]
 
-router = APIRouter(prefix="/projects", tags=["Projects (Admin)"], dependencies=[Depends(require_api_key)])
+router = APIRouter(prefix="/admin/projects", tags=["Projects (Admin)"], dependencies=[Depends(require_api_key)])
 
 #create project
 @router.post("/", status_code = status.HTTP_201_CREATED)
