@@ -15,3 +15,6 @@ class InvalidStatusError(DomainError):
 
 class ProjectNotFoundError(DomainError):
     pass
+
+class ProjectNotPublishableError(DomainError):
+    pass
