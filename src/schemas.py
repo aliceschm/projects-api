@@ -8,17 +8,17 @@ from enum import Enum
 from datetime import date
 
 class ProjectLang(str, Enum):
-    pt = "pt"
-    en = "en"
+    PT = "pt"
+    EN = "en"
 
 class ProjectStatus(str, Enum):
-    idea = "idea"
-    planning = "planning"
-    in_progress = "in_progress"
-    paused = "paused"
-    finished = "finished"
-    archived = "archived"
-    published = "published"
+    IDEA = "idea"
+    PLANNING = "planning"
+    IN_PROGRESS = "in_progress"
+    PAUSED = "paused"
+    FINISHED = "finished"
+    ARCHIVED = "archived"
+    PUBLISHED = "published"
 
 class ProjectDescCreate(BaseModel):
     lang: ProjectLang
