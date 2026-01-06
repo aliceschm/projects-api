@@ -5,7 +5,7 @@ from src import models
 from src.schemas import ProjectCreate, ProjectPatch, ProjectStatus, ProjectOut, ProjectDetailOut
 from src.services.stacks_service import get_or_create_stack, update_project_stacks
 from src.services.project_desc_service import update_project_desc
-from src.domain.project_rules import validate_deploy_date, validate_slug_unique, validate_status, validate_project_publishable
+from src.domain.project_rules import validate_deploy_date, validate_slug_unique, validate_status, validate_project_publishable, validate_status_not_published
 from src.domain.exceptions import ProjectNotFoundError
 
 
@@ -22,6 +22,8 @@ def create_project(db: Session, project: ProjectCreate):
     validate_deploy_date(project.deploy_date)
     validate_slug_unique(db, project.slug)
     validate_status(project.status, ProjectStatus)
+    validate_status_not_published(project.status)
+
 
     # Create the project record
     db_project = models.Projects(
@@ -142,6 +144,10 @@ def patch_project(db: Session, project_id: int, patch: ProjectPatch):
 
     if patch.slug is not None:
         validate_slug_unique(db, patch.slug, project_id)
+    
+    if patch.status is not None:
+        validate_status_not_published(patch.status)
+
 
     # Update description: create/update/remove
     if patch.descriptions is not None:
