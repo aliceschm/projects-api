@@ -10,7 +10,7 @@ from datetime import datetime
 class Projects(Base):
     __tablename__ = 'projects'
     __table_args__ = (
-        CheckConstraint("status IN ('idea', 'planning', 'in_progress', 'paused', 'finished', 'archived')",
+        CheckConstraint("status IN ('idea', 'planning', 'in_progress', 'paused', 'finished', 'archived', 'published')",
                         name="status_check"),
         {"schema": "portfolio"},
     )
