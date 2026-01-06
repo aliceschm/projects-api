@@ -30,3 +30,10 @@ def patch_project(db: db_dependency, project_id: int, patch: ProjectPatch, respo
 @router.delete("/{project_id}", status_code = status.HTTP_204_NO_CONTENT)
 def delete_project(db: db_dependency, project_id: int):
     projects_service.delete_project(db, project_id)
+
+#publish project
+@router.post("/{project_id}/publish", status_code=status.HTTP_200_OK)
+def publish_project(db: db_dependency,project_id: int,response: Response):
+    published_project = projects_service.publish_project(db, project_id)
+    response.headers["Location"] = f"/projects/{published_project.id}"
+    return published_project
