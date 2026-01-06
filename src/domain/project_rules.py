@@ -2,7 +2,8 @@ from datetime import date
 from sqlalchemy.orm import Session
 from src import models
 from src.domain.exceptions import InvalidDeployDateError, InvalidStatusError, SlugAlreadyExistsError, ProjectNotPublishableError
-from src.schemas import ProjectLang
+from src.schemas import ProjectLang, ProjectStatus
+
 
 REQUIRED_LANGS = {lang.value for lang in ProjectLang}
 REQUIRED_DESC_FIELDS = {"name", "about", "full_desc"}
@@ -57,3 +58,8 @@ def validate_project_publishable(project):
 
     if errors:
         raise ProjectNotPublishableError("; ".join(errors))
+
+
+def validate_status_not_published(status):
+    if status == ProjectStatus.PUBLISHED:
+        raise InvalidStatusError("published status is only allowed via publish endpoint")
