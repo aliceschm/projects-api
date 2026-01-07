@@ -21,6 +21,7 @@ class ProjectStatus(str, Enum):
     FINISHED = "finished"
     ARCHIVED = "archived"
     PUBLISHED = "published"
+    DRAFT = "draft"
 
 
 class ProjectDescCreate(BaseModel):

@@ -18,7 +18,11 @@ from src.domain.project_rules import (
     validate_project_publishable,
     validate_status_not_published,
 )
-from src.domain.exceptions import ProjectNotFoundError
+from src.domain.exceptions import (
+    ProjectNotFoundError,
+    EmptyPatchError,
+    InvalidStatusError,
+)
 
 
 # CRUD - PROJECT
@@ -142,39 +146,47 @@ def patch_project(db: Session, project_id: int, patch: ProjectPatch):
     if not project:
         raise ProjectNotFoundError()
 
+    data = patch.model_dump(exclude_unset=True)
+    data = {k: v for k, v in data.items() if v is not None}
+
+    if not data and patch.descriptions is None and patch.stacks is None:
+        raise EmptyPatchError()
+
     # Logic validations
     if patch.deploy_date is not None:
         validate_deploy_date(patch.deploy_date)
 
     if patch.status is not None:
         validate_status(patch.status, ProjectStatus)
+        validate_status_not_published(patch.status)
 
     if patch.slug is not None:
         validate_slug_unique(db, patch.slug, project_id)
 
-    if patch.status is not None:
-        validate_status_not_published(patch.status)
+    content_changed = False
 
-    # Update description: create/update/remove
+    # Update main table
+    for field in ("slug", "deploy_date"):
+        if field in data and getattr(project, field) != data[field]:
+            setattr(project, field, data[field])
+            content_changed = True
+
+    # Update descriptions
     if patch.descriptions is not None:
         update_project_desc(db, project_id, patch.descriptions)
-
-    # Update main table (projects)
-    data = patch.model_dump(exclude_unset=True)
-
-    for field in ("status", "slug", "deploy_date"):
-        if field in data:
-            setattr(project, field, data[field])
-
-    db.flush()
+        content_changed = True
 
     # Update stacks
     if patch.stacks is not None:
         update_project_stacks(db, project_id, patch.stacks)
+        content_changed = True
+
+    # Force draft only if something really changed
+    if project.status == ProjectStatus.PUBLISHED and content_changed:
+        project.status = ProjectStatus.DRAFT
 
     db.commit()
 
-    # Return full project aggregate for CMS usage
     return project
 
 
@@ -195,6 +207,9 @@ def publish_project(db: Session, project_id: int):
 
     if not project:
         raise ProjectNotFoundError()
+
+    if project.status == ProjectStatus.PUBLISHED:
+        raise InvalidStatusError("Project is already published")
 
     validate_project_publishable(project)
 
