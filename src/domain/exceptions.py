@@ -33,3 +33,7 @@ class ProjectNotPublishableError(DomainError):
 
 class EmptyPatchError(DomainError):
     default_message = "Please enter a value to be updated"
+
+
+class ProjectDeleteNotAllowedError(DomainError):
+    default_message = "Published projects cannot be deleted"

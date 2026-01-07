@@ -7,6 +7,8 @@ from src.domain.exceptions import (
     InvalidStatusError,
     ProjectNotFoundError,
     ProjectNotPublishableError,
+    EmptyPatchError,
+    ProjectDeleteNotAllowedError,
 )
 
 
@@ -53,3 +55,13 @@ def project_not_found_handler(request, exc):
 @app.exception_handler(ProjectNotPublishableError)
 def project_not_publishable_handler(request, exc):
     return JSONResponse(status_code=424, content={"detail": str(exc)})
+
+
+@app.exception_handler(EmptyPatchError)
+def empty_patch_handler(request, exc):
+    return JSONResponse(status_code=422, content={"detail": str(exc)})
+
+
+@app.exception_handler(ProjectDeleteNotAllowedError)
+def project_delete_handler(request, exc):
+    return JSONResponse(status_code=409, content={"detail": str(exc)})

@@ -22,6 +22,7 @@ from src.domain.exceptions import (
     ProjectNotFoundError,
     EmptyPatchError,
     InvalidStatusError,
+    ProjectDeleteNotAllowedError,
 )
 
 
@@ -196,6 +197,9 @@ def delete_project(db: Session, project_id: int):
 
     if not project:
         raise ProjectNotFoundError()
+
+    if project.status == ProjectStatus.PUBLISHED:
+        raise ProjectDeleteNotAllowedError()
 
     db.delete(project)
     db.commit()
