@@ -1,35 +1,34 @@
 FROM python:3.12-slim
 
-# Disable Python output buffering
+# Disable output buffering
 ENV PYTHONUNBUFFERED=1
 
-# Create a non-root user
-RUN groupadd -r appuser && useradd -r -g appuser -d /app appuser
-
-# Set working directory
+# Set work directory
 WORKDIR /app
 
-# Copy requirements first to leverage Docker cache
-COPY requirements.txt .
-
-# Install system dependencies and Python packages
+# Install system dependencies
 RUN apt-get update \
     && apt-get install -y git curl build-essential libpq-dev \
-    && pip install --upgrade pip \
-    && pip install --no-cache-dir -r requirements.txt \
     && rm -rf /var/lib/apt/lists/*
+
+# Copy and install Python dependencies
+COPY requirements.txt .
+RUN pip install --upgrade pip \
+ && pip install --no-cache-dir -r requirements.txt
 
 # Copy application code
 COPY . .
 
-# Change ownership to non-root user
-RUN chown -R appuser:appuser /app
+# Create non-root user
+RUN groupadd -r appuser \
+ && useradd -r -g appuser -d /app appuser \
+ && chown -R appuser:appuser /app
 
 # Switch to non-root user
 USER appuser
 
-# Expose the port Uvicorn will run on
+# Expose application port
 EXPOSE 8000
 
-# Default command to run the application
+# Run the application
 CMD ["uvicorn", "src.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
