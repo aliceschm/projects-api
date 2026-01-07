@@ -1,8 +1,8 @@
 # Database connection and get_db dependency
 
 from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker 
-from sqlalchemy.ext.declarative import declarative_base 
+from sqlalchemy.orm import sessionmaker
+from sqlalchemy.ext.declarative import declarative_base
 from dotenv import load_dotenv
 import os
 
@@ -26,15 +26,17 @@ SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 # You inherit from this Base when defining tables with SQLAlchemy ORM
 Base = declarative_base()
 
+
 # get_db is a dependency used in FastAPI endpoints
 # It's a Python generator that yields a database session for each request
 # Ensures the session is properly closed after the request finishes
 def get_db():
     db = SessionLocal()  # create a new session
     try:
-        yield db         # provide the session to the route
+        yield db  # provide the session to the route
     finally:
-        db.close()       # close session after request is done
+        db.close()  # close session after request is done
+
 
 # # Test the connection
 # try:
