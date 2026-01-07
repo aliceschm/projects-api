@@ -29,3 +29,7 @@ class ProjectNotFoundError(DomainError):
 
 class ProjectNotPublishableError(DomainError):
     default_message = "Project cannot be published due to missing required data"
+
+
+class EmptyPatchError(DomainError):
+    default_message = "Please enter a value to be updated"
