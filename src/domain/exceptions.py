@@ -1,7 +1,9 @@
 # Raise domain validations exceptions
 
+
 class DomainError(Exception):
     """Base class for domain exceptions"""
+
     default_message = "Domain error"
 
     def __init__(self, message: str | None = None):

@@ -12,8 +12,7 @@ def update_project_desc(db, project_id: int, desc_patches: list):
         desc = (
             db.query(models.ProjectDesc)
             .filter(
-                models.ProjectDesc.id == project_id,
-                models.ProjectDesc.lang == lang
+                models.ProjectDesc.id == project_id, models.ProjectDesc.lang == lang
             )
             .first()
         )
@@ -28,7 +27,7 @@ def update_project_desc(db, project_id: int, desc_patches: list):
         if is_empty:
             if desc:
                 db.delete(desc)
-            continue  
+            continue
 
         # Create if it doesn't exist
         if not desc:
@@ -40,4 +39,4 @@ def update_project_desc(db, project_id: int, desc_patches: list):
             if field in data:
                 setattr(desc, field, data[field])
 
-    db.flush()  
+    db.flush()

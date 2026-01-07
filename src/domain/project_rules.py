@@ -1,7 +1,12 @@
 from datetime import date
 from sqlalchemy.orm import Session
 from src import models
-from src.domain.exceptions import InvalidDeployDateError, InvalidStatusError, SlugAlreadyExistsError, ProjectNotPublishableError
+from src.domain.exceptions import (
+    InvalidDeployDateError,
+    InvalidStatusError,
+    SlugAlreadyExistsError,
+    ProjectNotPublishableError,
+)
 from src.schemas import ProjectLang, ProjectStatus
 
 
@@ -15,7 +20,7 @@ def validate_deploy_date(deploy_date):
 
 
 def validate_slug_unique(db: Session, slug: str, project_id: int | None = None):
-    #validate if slug exists in project create and project patch
+    # validate if slug exists in project create and project patch
     query = db.query(models.Projects).filter(models.Projects.slug == slug)
 
     if project_id:
@@ -62,4 +67,6 @@ def validate_project_publishable(project):
 
 def validate_status_not_published(status):
     if status == ProjectStatus.PUBLISHED:
-        raise InvalidStatusError("published status is only allowed via publish endpoint")
+        raise InvalidStatusError(
+            "published status is only allowed via publish endpoint"
+        )

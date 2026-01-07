@@ -1,31 +1,47 @@
 # Defines SQLAlchemy ORM models representing database tables.
 # These classes allow interaction with the database using Python objects instead of raw SQL.
 
-from sqlalchemy import Text, CheckConstraint, Date, Column, ForeignKey, Integer, PrimaryKeyConstraint, TIMESTAMP, ARRAY
+from sqlalchemy import (
+    Text,
+    CheckConstraint,
+    Date,
+    Column,
+    ForeignKey,
+    Integer,
+    PrimaryKeyConstraint,
+    TIMESTAMP,
+    ARRAY,
+)
 from sqlalchemy.orm import relationship
 from sqlalchemy.dialects.postgresql import JSONB
 from src.database import Base
 from datetime import datetime
 
+
 class Projects(Base):
-    __tablename__ = 'projects'
+    __tablename__ = "projects"
     __table_args__ = (
-        CheckConstraint("status IN ('idea', 'planning', 'in_progress', 'paused', 'finished', 'archived', 'published')",
-                        name="status_check"),
+        CheckConstraint(
+            "status IN ('idea', 'planning', 'in_progress', 'paused', 'finished', 'archived', 'published')",
+            name="status_check",
+        ),
         {"schema": "portfolio"},
     )
 
     id = Column(Integer, primary_key=True, autoincrement=True, index=True)
     created_at = Column(TIMESTAMP, nullable=False, default=datetime.now)
-    updated_at = Column(TIMESTAMP, nullable=False, default=datetime.now, onupdate=datetime.now)
+    updated_at = Column(
+        TIMESTAMP, nullable=False, default=datetime.now, onupdate=datetime.now
+    )
     status = Column(Text, nullable=False, server_default="idea")
     slug = Column(Text, nullable=False)
     deploy_date = Column(Date, nullable=True)
 
-    descriptions = relationship("ProjectDesc",
+    descriptions = relationship(
+        "ProjectDesc",
         back_populates="project",
         cascade="all, delete-orphan",
-        lazy="selectin"
+        lazy="selectin",
     )
 
     stacks = relationship(
@@ -34,6 +50,7 @@ class Projects(Base):
         back_populates="projects",
         lazy="selectin",
     )
+
 
 class ProjectDesc(Base):
     __tablename__ = "project_desc"
@@ -49,14 +66,11 @@ class ProjectDesc(Base):
     full_desc = Column(Text)
     lang = Column(Text, nullable=False, server_default="pt")
 
-    project = relationship(
-        "Projects",
-        back_populates="descriptions",
-        lazy= "selectin"
-    )
+    project = relationship("Projects", back_populates="descriptions", lazy="selectin")
+
 
 class Stacks(Base):
-    __tablename__ = 'stacks'
+    __tablename__ = "stacks"
     __table_args__ = {"schema": "portfolio"}
 
     id = Column(Integer, primary_key=True, autoincrement=True)
@@ -71,13 +85,14 @@ class Stacks(Base):
     )
 
 
-
 class ProjectStack(Base):
-    __tablename__ = 'project_stack'
+    __tablename__ = "project_stack"
     __table_args__ = (
         PrimaryKeyConstraint("project_id", "stack_id"),
         {"schema": "portfolio"},
     )
 
-    project_id = Column(Integer, ForeignKey("portfolio.projects.id", ondelete="CASCADE"))
+    project_id = Column(
+        Integer, ForeignKey("portfolio.projects.id", ondelete="CASCADE")
+    )
     stack_id = Column(Integer, ForeignKey("portfolio.stacks.id"))

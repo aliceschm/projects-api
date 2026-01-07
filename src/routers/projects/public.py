@@ -13,14 +13,16 @@ db_dependency = Annotated[Session, Depends(get_db)]
 router = APIRouter(prefix="/projects", tags=["Projects (Public)"])
 
 
-@router.get("/", status_code = status.HTTP_200_OK, response_model = List[ProjectOut])
+@router.get("/", status_code=status.HTTP_200_OK, response_model=List[ProjectOut])
 def read_all_projects(db: db_dependency, lang: str = Depends(get_language)):
-   result_projects = projects_service.read_all_projects(db, lang)
-   return result_projects
+    result_projects = projects_service.read_all_projects(db, lang)
+    return result_projects
 
-#read project
-@router.get("/{project_id}", status_code = status.HTTP_200_OK, response_model = ProjectDetailOut)
+
+# read project
+@router.get(
+    "/{project_id}", status_code=status.HTTP_200_OK, response_model=ProjectDetailOut
+)
 def read_project(db: db_dependency, project_id: int, lang: str = Depends(get_language)):
     result_project = projects_service.read_project_by_id(db, project_id, lang)
     return result_project
-
