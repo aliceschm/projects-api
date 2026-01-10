@@ -1,0 +1,29 @@
+version: "3.9"
+
+services:
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: test
+      POSTGRES_PASSWORD: test
+      POSTGRES_DB: test_db
+
+  api:
+    build: .
+    environment:
+      DATABASE_URL: postgresql://test:test@db:5432/test_db
+      API_KEY: test-key
+    depends_on:
+      - db
+    ports:
+      - "8000:8000"
+    command: ["uvicorn", "src.main:app", "--host", "0.0.0.0", "--port", "8000"]
+
+  # tests:
+  #   build: .
+  #   depends_on:
+  #     - api
+  #     - db
+  #   command: bash -c "pip install pytest pytest-asyncio httpx && pytest -v"
+  #   environment:
+  #     DATABASE_URL: postgres://test:test@db:5432/test_db
