@@ -11,6 +11,7 @@ from sqlalchemy import (
     PrimaryKeyConstraint,
     TIMESTAMP,
     func,
+    Enum,
 )
 from sqlalchemy.orm import relationship
 from src.database import Base
@@ -32,8 +33,20 @@ class Projects(Base):
     updated_at = Column(
         TIMESTAMP, nullable=False, server_default=func.now(), onupdate=datetime.now
     )
-    status = Column(Text, nullable=False, server_default="idea")
-    slug = Column(Text, nullable=False)
+    status = Column(
+       Enum(
+        "idea",
+        "planning",
+        "in_progress",
+        "paused",
+        "finished",
+        "archived",
+        "published",
+        name="project_status",
+    ),
+    nullable=False,
+    server_default="idea",)
+    slug = Column(Text, nullable=False, unique=True)
     deploy_date = Column(Date, nullable=True)
 
     descriptions = relationship(
@@ -49,6 +62,9 @@ class Projects(Base):
         back_populates="projects",
         lazy="selectin",
     )
+
+    def __repr__(self):
+        return f"<Project id={self.id} slug={self.slug} status={self.status}>"
 
 
 class ProjectDesc(Base):
@@ -74,7 +90,7 @@ class Stacks(Base):
 
     id = Column(Integer, primary_key=True, autoincrement=True)
     name = Column(Text, nullable=False)
-    name_normalized = Column(Text, nullable=False)
+    name_normalized = Column(Text, nullable=False, unique=True)
 
     projects = relationship(
         "Projects",
@@ -94,4 +110,5 @@ class ProjectStack(Base):
     project_id = Column(
         Integer, ForeignKey("portfolio.projects.id", ondelete="CASCADE")
     )
-    stack_id = Column(Integer, ForeignKey("portfolio.stacks.id"))
+    stack_id = Column(Integer, ForeignKey("portfolio.stacks.id", ondelete="CASCADE")
+)
