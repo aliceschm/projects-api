@@ -1,11 +1,10 @@
-
 .PHONY: dev api-test api-test-down test
 
 dev:
 	uvicorn src.main:app --reload
 
 api-test:
-	docker compose -f docker-compose.test.yaml up --build api db
+	docker compose -f docker-compose.test.yaml up --build
 
 api-test-down:
 	docker compose -f docker-compose.test.yaml down -v
