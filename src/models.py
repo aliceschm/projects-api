@@ -34,18 +34,19 @@ class Projects(Base):
         TIMESTAMP, nullable=False, server_default=func.now(), onupdate=datetime.now
     )
     status = Column(
-       Enum(
-        "idea",
-        "planning",
-        "in_progress",
-        "paused",
-        "finished",
-        "archived",
-        "published",
-        name="project_status",
-    ),
-    nullable=False,
-    server_default="idea",)
+        Enum(
+            "idea",
+            "planning",
+            "in_progress",
+            "paused",
+            "finished",
+            "archived",
+            "published",
+            name="project_status",
+        ),
+        nullable=False,
+        server_default="idea",
+    )
     slug = Column(Text, nullable=False, unique=True)
     deploy_date = Column(Date, nullable=True)
 
@@ -110,5 +111,4 @@ class ProjectStack(Base):
     project_id = Column(
         Integer, ForeignKey("portfolio.projects.id", ondelete="CASCADE")
     )
-    stack_id = Column(Integer, ForeignKey("portfolio.stacks.id", ondelete="CASCADE")
-)
+    stack_id = Column(Integer, ForeignKey("portfolio.stacks.id", ondelete="CASCADE"))

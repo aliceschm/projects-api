@@ -12,7 +12,9 @@ router = APIRouter(prefix="/projects", tags=["Projects (Public)"])
 
 
 @router.get("/", status_code=status.HTTP_200_OK, response_model=List[ProjectOut])
-def read_all_projects(db: Annotated[Session, Depends(get_db)], lang: str = Depends(get_language)):
+def read_all_projects(
+    db: Annotated[Session, Depends(get_db)], lang: str = Depends(get_language)
+):
     result_projects = projects_service.read_all_projects(db, lang)
     return result_projects
 
@@ -21,6 +23,10 @@ def read_all_projects(db: Annotated[Session, Depends(get_db)], lang: str = Depen
 @router.get(
     "/{project_id}", status_code=status.HTTP_200_OK, response_model=ProjectDetailOut
 )
-def read_project(db: Annotated[Session, Depends(get_db)], project_id: int, lang: str = Depends(get_language)):
+def read_project(
+    db: Annotated[Session, Depends(get_db)],
+    project_id: int,
+    lang: str = Depends(get_language),
+):
     result_project = projects_service.read_project_by_id(db, project_id, lang)
     return result_project
