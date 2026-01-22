@@ -7,11 +7,11 @@ services:
       POSTGRES_USER: test
       POSTGRES_PASSWORD: test
       POSTGRES_DB: test_db
-      healthcheck:
+    healthcheck:
       test: ["CMD-SHELL", "pg_isready -U test"]
-        interval: 2s
-        timeout: 2s
-        retries: 10
+      interval: 2s
+      timeout: 2s
+      retries: 10
 
   api:
     build: .
