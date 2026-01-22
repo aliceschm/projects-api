@@ -10,6 +10,7 @@ from sqlalchemy import (
     Integer,
     PrimaryKeyConstraint,
     TIMESTAMP,
+    func,
 )
 from sqlalchemy.orm import relationship
 from src.database import Base
@@ -27,9 +28,9 @@ class Projects(Base):
     )
 
     id = Column(Integer, primary_key=True, autoincrement=True, index=True)
-    created_at = Column(TIMESTAMP, nullable=False, default=datetime.now)
+    created_at = Column(TIMESTAMP, nullable=False, server_default=func.now())
     updated_at = Column(
-        TIMESTAMP, nullable=False, default=datetime.now, onupdate=datetime.now
+        TIMESTAMP, nullable=False, server_default=func.now(), onupdate=datetime.now
     )
     status = Column(Text, nullable=False, server_default="idea")
     slug = Column(Text, nullable=False)
