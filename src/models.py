@@ -10,10 +10,8 @@ from sqlalchemy import (
     Integer,
     PrimaryKeyConstraint,
     TIMESTAMP,
-    ARRAY,
 )
 from sqlalchemy.orm import relationship
-from sqlalchemy.dialects.postgresql import JSONB
 from src.database import Base
 from datetime import datetime
 
