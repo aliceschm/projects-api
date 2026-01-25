@@ -28,5 +28,5 @@ jobs:
         with:
           python-version: "3.11"
       - run: pip install bandit
-      - run: bandit -r app -ll --format txt
+      - run: bandit -r src -ll --format txt
   
