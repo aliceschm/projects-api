@@ -9,7 +9,7 @@ on:
 
 jobs:
   lint:
-    name: Quality: Lint (Ruff)
+    name: Quality - Lint (Ruff)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -20,7 +20,7 @@ jobs:
       - run: ruff check .
 
   sast:
-    name: Security: SAST (Bandit)
+    name: Security - SAST (Bandit)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
