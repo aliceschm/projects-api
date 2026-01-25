@@ -16,13 +16,14 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
             const labels = [
-              { name: "feat", color: "a67b5b", description: "New features or enhancements to the project" },
-              { name: "bug", color: "b55252", description: "Fixes for code problems" },
-              { name: "chore", color: "c1b398", description: "Maintenance without feature changes" },
-              { name: "test", color: "7a9e9f", description: "Code tests and validations" },
-              { name: "documentation", color: "d6a77a", description: "Improvements or additions to documentation" },
-              { name: "refactor", color: "9b8f82", description: "Code cleanup and restructuring" },
-              { name: "style", color: "bfa5a0", description: "Changes related to visual presentation only" }
+             { name: "feat", color: "6ea8fe", description: "New features or enhancements to the project" },
+             { name: "bug", color: "2f5d8a", description: "Fixes for code problems" },
+             { name: "chore", color: "7fb3a6", description: "Maintenance without feature changes" },
+             { name: "test", color: "4fa3a5", description: "Code tests and validations" },
+             { name: "documentation", color: "9ec5e8", description: "Improvements or additions to documentation" },
+             { name: "refactor", color: "3b7f6b", description: "Code cleanup and restructuring" },
+             { name: "style", color: "a7c7e7", description: "Changes related to visual presentation only" }       
+
             ];
 
             for (const label of labels) {
