@@ -1,5 +1,4 @@
 # Services related to projectdesc table
-from sqlalchemy.orm import Session
 from src import models
 
 

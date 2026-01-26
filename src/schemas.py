@@ -3,7 +3,7 @@
 # Schemas are separate from ORM models to decouple database structure from API interface.
 
 from pydantic import BaseModel, Field
-from typing import List, Dict, Optional, Any
+from typing import List, Optional
 from enum import Enum
 from datetime import date
 
@@ -42,7 +42,7 @@ class ProjectCreate(BaseModel):
     )  # if field is not received its viewed as empty list - avoid  'NoneType' object is not iterable
     # project_desc table
     descriptions: List[ProjectDescCreate] = Field(
-        ..., min_items=1
+        ..., min_length=1
     )  # guarantee list is not received empty
 
 
