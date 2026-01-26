@@ -6,13 +6,18 @@ dev:
 
 # Run API for development with test DB
 api-test:
-	docker compose -f docker-compose.test.yaml up --build api db
+	docker compose -f docker-compose.test.yaml up -d --build api db
 
 # Exit api-test
 api-test-down:
 	docker compose -f docker-compose.test.yaml down -v --remove-orphans
 
-# Run pytest and close
+# Only run pytest
+pytest:
+	docker compose -f docker-compose.test.yaml run --rm tests
+
+# Build, run pytest and close
 test:
 	docker compose -f docker-compose.test.yaml up --build --abort-on-container-exit --exit-code-from tests
 	docker compose -f docker-compose.test.yaml down -v --remove-orphans
+
