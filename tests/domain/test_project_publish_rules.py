@@ -13,6 +13,11 @@ from src.schemas import ProjectLang, ProjectStatus
 from tests.domain.fakes import FakeProject, FakeDescription
 
 
+# Publish rules: prevent invalid projects from being published
+
+
+# Status rules that protect the publish flow
+
 def test_published_status_is_not_allowed_directly():
     with pytest.raises(InvalidStatusError):
         validate_status_not_published(ProjectStatus.PUBLISHED)
@@ -21,6 +26,21 @@ def test_published_status_is_not_allowed_directly():
 def test_non_published_status_is_allowed():
     validate_status_not_published(ProjectStatus.DRAFT)
 
+
+def test_validate_status_not_allowed():
+    allowed = {ProjectStatus.DRAFT}
+
+    with pytest.raises(InvalidStatusError):
+        validate_status(ProjectStatus.ARCHIVED, allowed)
+
+
+def test_validate_status_allowed():
+    allowed = {ProjectStatus.DRAFT, ProjectStatus.ARCHIVED}
+
+    validate_status(ProjectStatus.DRAFT, allowed)
+
+
+# Project publishability rules
 
 def test_project_without_deploy_date_is_not_publishable():
     project = FakeProject(stacks=["FastAPI"], descriptions=[])
@@ -91,16 +111,3 @@ def test_valid_project_is_publishable():
     )
 
     validate_project_publishable(project)
-
-
-def test_validate_status_not_allowed():
-    allowed = {ProjectStatus.DRAFT}
-
-    with pytest.raises(InvalidStatusError):
-        validate_status(ProjectStatus.ARCHIVED, allowed)
-
-
-def test_validate_status_allowed():
-    allowed = {ProjectStatus.DRAFT, ProjectStatus.ARCHIVED}
-
-    validate_status(ProjectStatus.DRAFT, allowed)
