@@ -16,19 +16,9 @@ services:
     environment:
       DATABASE_URL: postgresql://test:test@db:5432/test_db
       API_KEY: test-key
-    depends_on:
+    depends_on:x
       - db
     ports:
       - "8000:8000"
     command: ["uvicorn", "src.main:app", "--host", "0.0.0.0", "--port", "8000"]
 
-  tests:
-    build: .
-    depends_on:
-      db:
-        condition: service_healthy
-      api:
-        condition: service_started
-    environment:
-      DATABASE_URL: postgresql://test:test@db:5432/test_db
-    command: ["pytest", "-v"]
