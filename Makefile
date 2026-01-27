@@ -11,13 +11,3 @@ api-test:
 # Exit api-test
 api-test-down:
 	docker compose -f docker-compose.test.yaml down -v --remove-orphans
-
-# Only run pytest
-pytest:
-	docker compose -f docker-compose.test.yaml run --rm tests
-
-# Build, run pytest and close
-test:
-	docker compose -f docker-compose.test.yaml up --build --abort-on-container-exit --exit-code-from tests
-	docker compose -f docker-compose.test.yaml down -v --remove-orphans
-
