@@ -42,6 +42,7 @@ class Projects(Base):
             "finished",
             "archived",
             "published",
+            "draft",
             name="project_status",
         ),
         nullable=False,
