@@ -1,4 +1,4 @@
-git class FakeDescription:
+class FakeDescription:
     def __init__(self, lang, name=None, about=None, full_desc=None):
         self.lang = lang
         self.name = name
