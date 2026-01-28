@@ -8,7 +8,7 @@ WORKDIR /app
 
 # Install system dependencies
 RUN apt-get update \
-    && apt-get install -y git curl build-essential libpq-dev postgresql-client \
+    && apt-get install -y git curl build-essential libpq-dev \
     && rm -rf /var/lib/apt/lists/*
 
 # Copy and install Python dependencies
@@ -18,13 +18,6 @@ RUN pip install --upgrade pip \
 
 # Copy application code
 COPY . .
-
-# Copy entrypoint script and make it executable
-COPY entrypoint.sh /entrypoint.sh
-RUN chmod +x /entrypoint.sh
-
-# Make them executable
-RUN chmod +x wait-for-it.sh entrypoint.sh
 
 # Create non-root user
 RUN groupadd -r appuser \
@@ -37,8 +30,5 @@ USER appuser
 # Expose application port
 EXPOSE 8000
 
-# Set entrypoint
-ENTRYPOINT ["/entrypoint.sh"]
-
-# Run the application (will be executed by entrypoint)
+# Run the application
 CMD ["uvicorn", "src.main:app", "--host", "0.0.0.0", "--port", "8000"]
