@@ -3,6 +3,7 @@ from fastapi.testclient import TestClient
 from src.main import app
 from src.database import engine, SessionLocal, get_db
 
+
 @pytest.fixture(scope="function")
 def db_session():
     connection = engine.connect()

@@ -18,6 +18,7 @@ from tests.domain.fakes import FakeProject, FakeDescription
 
 # Status rules that protect the publish flow
 
+
 def test_published_status_is_not_allowed_directly():
     with pytest.raises(InvalidStatusError):
         validate_status_not_published(ProjectStatus.PUBLISHED)
@@ -41,6 +42,7 @@ def test_validate_status_allowed():
 
 
 # Project publishability rules
+
 
 def test_project_without_deploy_date_is_not_publishable():
     project = FakeProject(stacks=["FastAPI"], descriptions=[])
