@@ -6,7 +6,7 @@ dev:
 
 # Run API for development with test DB
 api-test:
-	docker compose -f docker-compose.test.yaml up -d --build api db
+	docker-compose -f docker-compose.test.yaml up 
 
 # Exit api-test
 api-test-down:
