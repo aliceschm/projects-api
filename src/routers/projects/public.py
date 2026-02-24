@@ -4,7 +4,7 @@ from fastapi import APIRouter, Depends, status
 from sqlalchemy.orm import Session
 from typing import List, Annotated
 from src.database import get_db
-from src.schemas import ProjectOut, ProjectOut, ProjectDetailOut
+from src.schemas import ProjectOut, ProjectDetailOut
 from src.services import projects_service
 from src.domain.language import get_language
 

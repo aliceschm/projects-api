@@ -22,7 +22,7 @@ class Projects(Base):
     __tablename__ = "projects"
     __table_args__ = (
         CheckConstraint(
-            "status IN ('idea', 'planning', 'in_progress', 'paused', 'finished', 'archived', 'published')",
+            "status IN ('idea', 'planning', 'in_progress', 'paused', 'finished', 'archived', 'published', 'draft')",
             name="status_check",
         ),
         {"schema": "portfolio"},
@@ -42,6 +42,7 @@ class Projects(Base):
             "finished",
             "archived",
             "published",
+            "draft",
             name="project_status",
         ),
         nullable=False,

@@ -47,6 +47,7 @@ def upgrade() -> None:
                 "finished",
                 "archived",
                 "published",
+                "draft",
                 name="project_status",
             ),
             server_default="idea",
@@ -55,7 +56,7 @@ def upgrade() -> None:
         sa.Column("slug", sa.Text(), nullable=False),
         sa.Column("deploy_date", sa.Date(), nullable=True),
         sa.CheckConstraint(
-            "status IN ('idea', 'planning', 'in_progress', 'paused', 'finished', 'archived', 'published')",
+            "status IN ('idea', 'planning', 'in_progress', 'paused', 'finished', 'archived', 'published', 'draft')",
             name="status_check",
         ),
         sa.PrimaryKeyConstraint("id"),

@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 from src.routers.projects import admin, public
+from src.routers import health
 from fastapi.responses import JSONResponse
 from src.domain.exceptions import (
     InvalidDeployDateError,
@@ -16,6 +17,7 @@ app = FastAPI()
 
 app.include_router(admin.router)
 app.include_router(public.router)
+app.include_router(health.router)
 
 
 @app.get("/")

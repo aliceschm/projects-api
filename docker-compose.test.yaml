@@ -1,5 +1,3 @@
-version: "3.9"
-
 services:
   db:
     image: postgres:16
@@ -7,6 +5,11 @@ services:
       POSTGRES_USER: test
       POSTGRES_PASSWORD: test
       POSTGRES_DB: test_db
+    # healthcheck:
+    #   test: ["CMD-SHELL", "pg_isready -U test_db"]
+    #   interval: 2s
+    #   timeout: 2s
+    #   retries: 10
 
   api:
     build: .
@@ -18,12 +21,3 @@ services:
     ports:
       - "8000:8000"
     command: ["uvicorn", "src.main:app", "--host", "0.0.0.0", "--port", "8000"]
-
-  # tests:
-  #   build: .
-  #   depends_on:
-  #     - api
-  #     - db
-  #   command: bash -c "pip install pytest pytest-asyncio httpx && pytest -v"
-  #   environment:
-  #     DATABASE_URL: postgres://test:test@db:5432/test_db
