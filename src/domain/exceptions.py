@@ -56,6 +56,7 @@ class ProjectDeleteNotAllowedError(DomainError):
 
 class UniqueConstraintError(DomainError):
     """Raised when a unique constraint is violated in the database."""
+
     default_message = "Unique constraint violated"
 
     def __init__(self, message: str | None = None, *, constraint: str | None = None):
