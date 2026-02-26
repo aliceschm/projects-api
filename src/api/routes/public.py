@@ -2,11 +2,11 @@
 
 from fastapi import APIRouter, Depends, status
 from typing import List, Annotated
-from src.schemas import ProjectOut, ProjectDetailOut
+from src.domain.schemas import ProjectOut, ProjectDetailOut
 from src.services import projects_service
 from src.domain.language import get_language
-from src.repositories.projects import UnitOfWork
-from src.repositories.dependencies import get_uow
+from src.infra.uow import UnitOfWork
+from src.api.dependencies import get_uow
 
 router = APIRouter(prefix="/projects", tags=["Projects (Public)"])
 

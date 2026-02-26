@@ -1,5 +1,5 @@
 # Services related to projectdesc table
-from src import models
+from src.infra.db import models
 
 
 def update_project_desc(db, project_id: int, desc_patches: list):

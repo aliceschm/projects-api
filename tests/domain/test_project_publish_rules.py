@@ -9,7 +9,7 @@ from src.domain.exceptions import (
     ProjectNotPublishableError,
     InvalidStatusError,
 )
-from src.schemas import ProjectLang, ProjectStatus
+from src.domain.schemas import ProjectLang, ProjectStatus
 from tests.domain.fakes import FakeProject, FakeDescription
 
 

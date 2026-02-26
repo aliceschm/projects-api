@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from src.api.routes import admin, public
-from src.api import health
+from src.api.routes import health
 from fastapi.responses import JSONResponse
 from src.domain.exceptions import (
     InvalidDeployDateError,

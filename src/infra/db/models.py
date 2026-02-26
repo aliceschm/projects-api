@@ -14,7 +14,7 @@ from sqlalchemy import (
     Enum,
 )
 from sqlalchemy.orm import relationship
-from src.database import Base
+from src.infra.db.database import Base
 from datetime import datetime
 
 

@@ -1,8 +1,8 @@
 # Services related to projects table in the db
-from src.repositories.projects import UnitOfWork
+from src.infra.uow import UnitOfWork
 from sqlalchemy.orm import Session, joinedload
-from src import models
-from src.schemas import (
+from src.infra.db import models
+from src.domain.schemas import (
     ProjectCreate,
     ProjectPatch,
     ProjectStatus,
@@ -26,56 +26,8 @@ from src.domain.exceptions import (
 
 # CRUD - PROJECT
 # Create project
-# def create_project(db: Session, project: ProjectCreate):
-#     """
-#     Service layer:
-#     - Router injects the DB session
-#     - Service receives the session and performs all DB work
-#     """
-
-#     # Logic validations
-#     validate_deploy_date(project.deploy_date)
-#     validate_status(project.status, ProjectStatus)
-#     validate_status_not_published(project.status)
-
-#     # Create the project record
-#     db_project = models.Projects(
-#         created_at=datetime.now(),
-#         updated_at=datetime.now(),
-#         status=project.status,
-#         slug=project.slug,
-#         deploy_date=project.deploy_date,
-#     )
-
-#     db.add(db_project)
-#     db.flush()  # ensure db_project.id exists
-
-#     # Insert multiple descriptions
-#     for desc in project.descriptions:
-#         db_desc = models.ProjectDesc(
-#             id=db_project.id,
-#             lang=desc.lang,
-#             name=desc.name,
-#             about=desc.about,
-#             full_desc=desc.full_desc,
-#         )
-#         db.add(db_desc)
-
-#     # Insert stacks
-#     for stack_name in project.stacks:
-#         stack = get_or_create_stack(db, stack_name)
-#         proj_stack = models.ProjectStack(project_id=db_project.id, stack_id=stack.id)
-#         db.add(proj_stack)
-
-#     # Commit everything
-#     db.commit()
-#     db.refresh(db_project)
-
-#     # Return full project aggregate for CMS usage
-#     return db_project
-
-
 def create_project(uow: UnitOfWork, project: ProjectCreate):
+    """Creates a new project. Returns the created project."""
     validate_deploy_date(project.deploy_date)
     validate_status(project.status, ProjectStatus)
     validate_status_not_published(project.status)

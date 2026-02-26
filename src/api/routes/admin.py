@@ -5,8 +5,8 @@ from typing import Annotated
 from src.domain.schemas import ProjectCreate, ProjectPatch
 from src.services import projects_service
 from src.auth.dependencies import require_api_key
-from src.infra.repositories.projects import UnitOfWork
-from src.infra.repositories.dependencies import get_uow
+from src.infra.uow import UnitOfWork
+from src.api.dependencies import get_uow
 
 router = APIRouter(
     prefix="/admin/projects",

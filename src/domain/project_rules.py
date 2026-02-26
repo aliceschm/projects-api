@@ -4,7 +4,7 @@ from src.domain.exceptions import (
     InvalidStatusError,
     ProjectNotPublishableError,
 )
-from src.schemas import ProjectLang, ProjectStatus
+from src.domain.schemas import ProjectLang, ProjectStatus
 
 
 REQUIRED_LANGS = {lang.value for lang in ProjectLang}
