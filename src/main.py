@@ -1,15 +1,15 @@
 from fastapi import FastAPI
-from src.routers.projects import admin, public
-from src.routers import health
+from src.api.routes import admin, public
+from src.api import health
 from fastapi.responses import JSONResponse
 from src.domain.exceptions import (
     InvalidDeployDateError,
-    SlugAlreadyExistsError,
     InvalidStatusError,
     ProjectNotFoundError,
     ProjectNotPublishableError,
     EmptyPatchError,
     ProjectDeleteNotAllowedError,
+    UniqueConstraintError,
 )
 
 
@@ -29,14 +29,6 @@ def root():
 def invalid_deploy_date_handler(request, exc):
     return JSONResponse(
         status_code=400,
-        content={"detail": str(exc)},
-    )
-
-
-@app.exception_handler(SlugAlreadyExistsError)
-def slug_exists_handler(request, exc):
-    return JSONResponse(
-        status_code=409,
         content={"detail": str(exc)},
     )
 
@@ -67,3 +59,11 @@ def empty_patch_handler(request, exc):
 @app.exception_handler(ProjectDeleteNotAllowedError)
 def project_delete_handler(request, exc):
     return JSONResponse(status_code=409, content={"detail": str(exc)})
+
+
+@app.exception_handler(UniqueConstraintError)
+def unique_constraint_handler(request, exc):
+    return JSONResponse(
+        status_code=409,
+        content={"detail": str(exc)},
+    )

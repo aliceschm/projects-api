@@ -1,6 +1,6 @@
 # Services related to projects table in the db
+from src.repositories.projects import UnitOfWork
 from sqlalchemy.orm import Session, joinedload
-from datetime import datetime
 from src import models
 from src.schemas import (
     ProjectCreate,
@@ -9,11 +9,9 @@ from src.schemas import (
     ProjectOut,
     ProjectDetailOut,
 )
-from src.services.stacks_service import get_or_create_stack, update_project_stacks
 from src.services.project_desc_service import update_project_desc
 from src.domain.project_rules import (
     validate_deploy_date,
-    validate_slug_unique,
     validate_status,
     validate_project_publishable,
     validate_status_not_published,
@@ -28,53 +26,81 @@ from src.domain.exceptions import (
 
 # CRUD - PROJECT
 # Create project
-def create_project(db: Session, project: ProjectCreate):
-    """
-    Service layer:
-    - Router injects the DB session
-    - Service receives the session and performs all DB work
-    """
+# def create_project(db: Session, project: ProjectCreate):
+#     """
+#     Service layer:
+#     - Router injects the DB session
+#     - Service receives the session and performs all DB work
+#     """
 
-    # Logic validations
+#     # Logic validations
+#     validate_deploy_date(project.deploy_date)
+#     validate_status(project.status, ProjectStatus)
+#     validate_status_not_published(project.status)
+
+#     # Create the project record
+#     db_project = models.Projects(
+#         created_at=datetime.now(),
+#         updated_at=datetime.now(),
+#         status=project.status,
+#         slug=project.slug,
+#         deploy_date=project.deploy_date,
+#     )
+
+#     db.add(db_project)
+#     db.flush()  # ensure db_project.id exists
+
+#     # Insert multiple descriptions
+#     for desc in project.descriptions:
+#         db_desc = models.ProjectDesc(
+#             id=db_project.id,
+#             lang=desc.lang,
+#             name=desc.name,
+#             about=desc.about,
+#             full_desc=desc.full_desc,
+#         )
+#         db.add(db_desc)
+
+#     # Insert stacks
+#     for stack_name in project.stacks:
+#         stack = get_or_create_stack(db, stack_name)
+#         proj_stack = models.ProjectStack(project_id=db_project.id, stack_id=stack.id)
+#         db.add(proj_stack)
+
+#     # Commit everything
+#     db.commit()
+#     db.refresh(db_project)
+
+#     # Return full project aggregate for CMS usage
+#     return db_project
+
+
+def create_project(uow: UnitOfWork, project: ProjectCreate):
     validate_deploy_date(project.deploy_date)
-    validate_slug_unique(db, project.slug)
     validate_status(project.status, ProjectStatus)
     validate_status_not_published(project.status)
 
-    # Create the project record
     db_project = models.Projects(
-        created_at=datetime.now(),
-        updated_at=datetime.now(),
         status=project.status,
         slug=project.slug,
         deploy_date=project.deploy_date,
     )
 
-    db.add(db_project)
-    db.flush()  # ensure db_project.id exists
-
-    # Insert multiple descriptions
-    for desc in project.descriptions:
-        db_desc = models.ProjectDesc(
-            id=db_project.id,
+    db_project.descriptions = [
+        models.ProjectDesc(
             lang=desc.lang,
             name=desc.name,
             about=desc.about,
             full_desc=desc.full_desc,
         )
-        db.add(db_desc)
+        for desc in project.descriptions
+    ]
 
-    # Insert stacks
-    for stack_name in project.stacks:
-        stack = get_or_create_stack(db, stack_name)
-        proj_stack = models.ProjectStack(project_id=db_project.id, stack_id=stack.id)
-        db.add(proj_stack)
+    uow.projects.set_project_stacks(db_project, project.stacks)
 
-    # Commit everything
-    db.commit()
-    db.refresh(db_project)
+    uow.projects.add(db_project)
+    uow.commit()
 
-    # Return full project aggregate for CMS usage
     return db_project
 
 
@@ -161,9 +187,6 @@ def patch_project(db: Session, project_id: int, patch: ProjectPatch):
         validate_status(patch.status, ProjectStatus)
         validate_status_not_published(patch.status)
 
-    if patch.slug is not None:
-        validate_slug_unique(db, patch.slug, project_id)
-
     content_changed = False
 
     # Update main table
@@ -192,8 +215,8 @@ def patch_project(db: Session, project_id: int, patch: ProjectPatch):
 
 
 # Delete project
-def delete_project(db: Session, project_id: int):
-    project = db.query(models.Projects).filter(models.Projects.id == project_id).first()
+def delete_project(uow: UnitOfWork, project_id: int):
+    project = uow.projects.get(project_id)
 
     if not project:
         raise ProjectNotFoundError()
@@ -201,13 +224,12 @@ def delete_project(db: Session, project_id: int):
     if project.status == ProjectStatus.PUBLISHED:
         raise ProjectDeleteNotAllowedError()
 
-    db.delete(project)
-    db.commit()
+    uow.delete(project)
+    uow.commit()
 
 
-# Publish project
-def publish_project(db: Session, project_id: int):
-    project = db.query(models.Projects).filter(models.Projects.id == project_id).first()
+def publish_project(uow: UnitOfWork, project_id: int):
+    project = uow.projects.get(project_id)
 
     if not project:
         raise ProjectNotFoundError()
@@ -219,7 +241,7 @@ def publish_project(db: Session, project_id: int):
 
     project.status = ProjectStatus.PUBLISHED
 
-    db.commit()
-    db.refresh(project)
+    uow.commit()
+    uow.refresh(project)
 
     return project
