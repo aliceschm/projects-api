@@ -45,28 +45,21 @@ class ProjectCreate(BaseModel):
         ..., min_length=1
     )  # guarantee list is not received empty
 
+class ProjectDescOut(BaseModel):
+    lang: ProjectLang
+    name: str
+    about: Optional[str] = None
+    full_desc: Optional[str] = None
 
 class ProjectOut(BaseModel):
     id: int
     slug: str
-    name: str
-    about: Optional[str] = None
-    stack_names: Optional[List[str]] = Field(default_factory=list)
-
-    model_config = {"from_attributes": True}
-
-
-class ProjectDetailOut(BaseModel):
-    id: int
-    lang: ProjectLang
-    slug: str
-    deploy_date: Optional[date] = None
     status: str
-    stack_names: Optional[List[str]] = Field(default_factory=list)
-    full_desc: Optional[str] = None
+    deploy_date: Optional[date] = None
+    descriptions: List[ProjectDescOut] = Field(default_factory=list)
+    stack_names: List[str] = Field(default_factory=list)
 
     model_config = {"from_attributes": True}
-
 
 class ProjectDescPatch(BaseModel):
     lang: str
