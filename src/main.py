@@ -5,6 +5,7 @@ from fastapi.responses import JSONResponse
 from src.domain.exceptions import (
     InvalidDeployDateError,
     InvalidStatusError,
+    ProjectDescriptionNotFoundError,
     ProjectNotFoundError,
     ProjectNotPublishableError,
     EmptyPatchError,
@@ -65,5 +66,12 @@ def project_delete_handler(request, exc):
 def unique_constraint_handler(request, exc):
     return JSONResponse(
         status_code=409,
+        content={"detail": str(exc)},
+    )
+
+@app.exception_handler(ProjectDescriptionNotFoundError)
+def project_description_not_found_handler(request, exc):
+    return JSONResponse(
+        status_code=404,
         content={"detail": str(exc)},
     )

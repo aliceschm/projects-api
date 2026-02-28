@@ -67,3 +67,8 @@ class UniqueConstraintError(DomainError):
             message = f"{self.default_message}: {constraint}"
 
         super().__init__(message)
+
+class ProjectDescriptionNotFoundError(DomainError):
+    """Raised when a project description in the requested language is not found."""
+
+    default_message = "Project description not found for the specified language"
