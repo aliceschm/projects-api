@@ -9,7 +9,7 @@ from src.domain.exceptions import (
     ProjectNotFoundError,
     ProjectNotPublishableError,
     EmptyPatchError,
-    ProjectDeleteNotAllowedError,
+    ActionNotAllowedError,
     UniqueConstraintError,
 )
 
@@ -57,8 +57,8 @@ def empty_patch_handler(request, exc):
     return JSONResponse(status_code=422, content={"detail": str(exc)})
 
 
-@app.exception_handler(ProjectDeleteNotAllowedError)
-def project_delete_handler(request, exc):
+@app.exception_handler(ActionNotAllowedError)
+def action_not_allowed_handler(request, exc):
     return JSONResponse(status_code=409, content={"detail": str(exc)})
 
 

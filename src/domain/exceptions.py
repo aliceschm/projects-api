@@ -48,10 +48,10 @@ class EmptyPatchError(DomainError):
     default_message = "Please enter a value to be updated"
 
 
-class ProjectDeleteNotAllowedError(DomainError):
-    """Raised when a published project is attempted to be deleted."""
+class ActionNotAllowedError(DomainError):
+    """Raised when a published project is attempted to be edited or deleted."""
 
-    default_message = "Published projects cannot be deleted"
+    default_message = "Published projects cannot be edited or deleted"
 
 
 class UniqueConstraintError(DomainError):
