@@ -1,7 +1,8 @@
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import IntegrityError
-from src.domain.exceptions import UniqueConstraintError
+from src.domain.exceptions import SlugAlreadyExistsError
 from src.infra.repositories.projects import ProjectsRepository
+
 
 class UnitOfWork:
     """
@@ -24,11 +25,6 @@ class UnitOfWork:
             self.db.commit()
         except IntegrityError as e:
             self.db.rollback()
-
-            diag = getattr(getattr(e, "orig", None), "diag", None)
-            constraint_name = getattr(diag, "constraint_name", None)
-            print(
-                f"IntegrityError in UnitOfWork.commit: {e}, constraint: {constraint_name}"
-            )
-
-            raise UniqueConstraintError(constraint=constraint_name) from e
+            if "projects_slug_key" in str(e.orig):
+                raise SlugAlreadyExistsError()
+            raise
