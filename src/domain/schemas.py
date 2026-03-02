@@ -38,7 +38,7 @@ class ProjectCreate(BaseModel):
         ...,
         pattern=r"^[a-z0-9]+(?:-[a-z0-9]+)*$",
         max_length=100,
-        description="Lowercase letters and numbers separated by hyphens."
+        description="Lowercase letters and numbers separated by hyphens.",
     )
     deploy_date: Optional[date] = None
     # stacks
@@ -91,7 +91,7 @@ class ProjectPatch(BaseModel):
         None,
         pattern=r"^[a-z0-9]+(?:-[a-z0-9]+)*$",
         max_length=100,
-        description="Lowercase letters and numbers separated by hyphens."
+        description="Lowercase letters and numbers separated by hyphens.",
     )
     deploy_date: Optional[date] = None
 
