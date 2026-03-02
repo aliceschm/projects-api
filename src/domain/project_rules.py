@@ -1,41 +1,35 @@
+from typing import Optional
 from datetime import date
-from sqlalchemy.orm import Session
-from src import models
 from src.domain.exceptions import (
     InvalidDeployDateError,
     InvalidStatusError,
-    SlugAlreadyExistsError,
     ProjectNotPublishableError,
 )
-from src.schemas import ProjectLang, ProjectStatus
+from src.domain.schemas import ProjectLang, ProjectOut, ProjectStatus
 
 
 REQUIRED_LANGS = {lang.value for lang in ProjectLang}
 REQUIRED_DESC_FIELDS = {"name", "about", "full_desc"}
 
 
-def validate_deploy_date(deploy_date):
-    if deploy_date and deploy_date > date.today():
+def validate_deploy_date(deploy_date: Optional[date]) -> None:
+    if deploy_date is None:
+        return
+
+    if deploy_date > date.today():
         raise InvalidDeployDateError()
 
 
-def validate_slug_unique(db: Session, slug: str, project_id: int | None = None):
-    # validate if slug exists in project create and project patch
-    query = db.query(models.Projects).filter(models.Projects.slug == slug)
-
-    if project_id:
-        query = query.filter(models.Projects.id != project_id)
-
-    if query.first():
-        raise SlugAlreadyExistsError()
+def validate_status(
+    status: Optional[ProjectStatus],
+) -> (
+    None
+):  # Pydantic will validate missing or invalid status, no exception handler neeed
+    if status is None:
+        return
 
 
-def validate_status(status, allowed):
-    if status not in allowed:
-        raise InvalidStatusError()
-
-
-def validate_project_publishable(project):
+def validate_project_publishable(project: ProjectOut) -> None:
     errors = []
 
     if not project.deploy_date:
@@ -65,7 +59,7 @@ def validate_project_publishable(project):
         raise ProjectNotPublishableError("; ".join(errors))
 
 
-def validate_status_not_published(status):
+def validate_status_not_published(status: ProjectStatus) -> None:
     if status == ProjectStatus.PUBLISHED:
         raise InvalidStatusError(
             "published status is only allowed via publish endpoint"

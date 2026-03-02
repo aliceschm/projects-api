@@ -34,7 +34,12 @@ class ProjectDescCreate(BaseModel):
 class ProjectCreate(BaseModel):
     # table projects fields
     status: ProjectStatus
-    slug: str
+    slug: str = Field(
+        ...,
+        pattern=r"^[a-z0-9]+(?:-[a-z0-9]+)*$",
+        max_length=100,
+        description="Lowercase letters and numbers separated by hyphens.",
+    )
     deploy_date: Optional[date] = None
     # stacks
     stacks: Optional[List[str]] = Field(
@@ -46,30 +51,33 @@ class ProjectCreate(BaseModel):
     )  # guarantee list is not received empty
 
 
-class ProjectOut(BaseModel):
-    id: int
-    slug: str
+class ProjectDescOut(BaseModel):
+    lang: ProjectLang
     name: str
     about: Optional[str] = None
-    stack_names: Optional[List[str]] = Field(default_factory=list)
-
-    model_config = {"from_attributes": True}
-
-
-class ProjectDetailOut(BaseModel):
-    id: int
-    lang: ProjectLang
-    slug: str
-    deploy_date: Optional[date] = None
-    status: str
-    stack_names: Optional[List[str]] = Field(default_factory=list)
     full_desc: Optional[str] = None
 
     model_config = {"from_attributes": True}
 
 
+class StackOut(BaseModel):
+    name: str
+    model_config = {"from_attributes": True}
+
+
+class ProjectOut(BaseModel):
+    id: int
+    slug: str
+    status: ProjectStatus
+    deploy_date: Optional[date] = None
+    descriptions: List[ProjectDescOut] = Field(default_factory=list)
+    stacks: List[StackOut] = Field(default_factory=list)
+
+    model_config = {"from_attributes": True}
+
+
 class ProjectDescPatch(BaseModel):
-    lang: str
+    lang: ProjectLang
     name: Optional[str] = None
     about: Optional[str] = None
     full_desc: Optional[str] = None
@@ -78,8 +86,13 @@ class ProjectDescPatch(BaseModel):
 
 
 class ProjectPatch(BaseModel):
-    status: Optional[str] = None
-    slug: Optional[str] = None
+    status: Optional[ProjectStatus] = None
+    slug: Optional[str] = Field(
+        None,
+        pattern=r"^[a-z0-9]+(?:-[a-z0-9]+)*$",
+        max_length=100,
+        description="Lowercase letters and numbers separated by hyphens.",
+    )
     deploy_date: Optional[date] = None
 
     descriptions: Optional[List[ProjectDescPatch]] = None

@@ -1,7 +1,7 @@
 from dotenv import load_dotenv
-from src.database import Base
+from src.infra.db.database import Base
 import os
-import src.models  # noqa: F401 # required for Alembic autogenerate
+import src.infra.db.models  # noqa: F401 # required for Alembic autogenerate
 
 from logging.config import fileConfig
 

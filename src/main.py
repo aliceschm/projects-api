@@ -1,16 +1,8 @@
-from fastapi import FastAPI
-from src.routers.projects import admin, public
-from src.routers import health
+from fastapi import FastAPI, Request
+from src.api.routes import admin, public
+from src.api.routes import health
 from fastapi.responses import JSONResponse
-from src.domain.exceptions import (
-    InvalidDeployDateError,
-    SlugAlreadyExistsError,
-    InvalidStatusError,
-    ProjectNotFoundError,
-    ProjectNotPublishableError,
-    EmptyPatchError,
-    ProjectDeleteNotAllowedError,
-)
+from src.domain.exceptions import DomainError
 
 
 app = FastAPI()
@@ -25,45 +17,27 @@ def root():
     return {"message": "Welcome to my Projects API"}
 
 
-@app.exception_handler(InvalidDeployDateError)
-def invalid_deploy_date_handler(request, exc):
+@app.exception_handler(DomainError)
+async def domain_error_handler(request: Request, exc: DomainError):
     return JSONResponse(
-        status_code=400,
-        content={"detail": str(exc)},
+        status_code=exc.status_code,
+        content={
+            "error": {
+                "code": exc.code,
+                "message": exc.message,
+            }
+        },
     )
 
 
-@app.exception_handler(SlugAlreadyExistsError)
-def slug_exists_handler(request, exc):
+@app.exception_handler(Exception)
+async def generic_exception_handler(request: Request, exc: Exception):
     return JSONResponse(
-        status_code=409,
-        content={"detail": str(exc)},
+        status_code=500,
+        content={
+            "error": {
+                "code": "internal_server_error",
+                "message": "An unexpected error occurred",
+            }
+        },
     )
-
-
-@app.exception_handler(InvalidStatusError)
-def invalid_status_handler(request, exc):
-    return JSONResponse(
-        status_code=400,
-        content={"detail": str(exc)},
-    )
-
-
-@app.exception_handler(ProjectNotFoundError)
-def project_not_found_handler(request, exc):
-    return JSONResponse(status_code=404, content={"detail": str(exc)})
-
-
-@app.exception_handler(ProjectNotPublishableError)
-def project_not_publishable_handler(request, exc):
-    return JSONResponse(status_code=424, content={"detail": str(exc)})
-
-
-@app.exception_handler(EmptyPatchError)
-def empty_patch_handler(request, exc):
-    return JSONResponse(status_code=422, content={"detail": str(exc)})
-
-
-@app.exception_handler(ProjectDeleteNotAllowedError)
-def project_delete_handler(request, exc):
-    return JSONResponse(status_code=409, content={"detail": str(exc)})

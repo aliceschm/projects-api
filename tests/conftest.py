@@ -1,7 +1,7 @@
 import pytest
 from fastapi.testclient import TestClient
 from src.main import app
-from src.database import engine, SessionLocal, get_db
+from src.infra.db.database import engine, SessionLocal, get_db
 
 
 @pytest.fixture(scope="function")
