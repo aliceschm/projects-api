@@ -1,9 +1,9 @@
 # All admin endpoints related to projects - auth required
 
-from fastapi import APIRouter, Depends, status, Response
-from typing import Annotated
-from src.domain.schemas import ProjectCreate, ProjectPatch
-from src.services import projects_service
+from fastapi import APIRouter, Depends, status, Response, Query
+from typing import Annotated, List
+from src.domain.schemas import ProjectCreate, ProjectPatch, ProjectLang, ProjectOut
+from src.services import projects_admin_service
 from src.auth.dependencies import require_api_key
 from src.infra.uow import UnitOfWork
 from src.api.dependencies import get_uow
@@ -22,9 +22,33 @@ def create_project(
     project: ProjectCreate,
     response: Response,
 ):
-    new_project = projects_service.create_project(uow, project)
+    new_project = projects_admin_service.create_project(uow, project)
     response.headers["Location"] = f"/projects/{new_project.id}"
     return new_project
+
+
+@router.get("/", status_code=status.HTTP_200_OK, response_model=List[ProjectOut])
+def read_all_projects(
+    uow: Annotated[UnitOfWork, Depends(get_uow)],
+    lang: ProjectLang | None = Query(default=None),
+):
+    return projects_admin_service.read_all_projects(uow, lang)
+
+
+# read project
+@router.get(
+    "/{project_id}", status_code=status.HTTP_200_OK, response_model=ProjectOut
+)
+def read_project(
+    uow: Annotated[UnitOfWork, Depends(get_uow)],
+    project_id: int,
+    lang: ProjectLang | None = Query(default=None),
+):
+    return projects_admin_service.read_project_by_id(
+        uow=uow,
+        project_id=project_id,
+        lang=lang,
+    )
 
 
 # update project
@@ -35,7 +59,7 @@ def patch_project(
     patch: ProjectPatch,
     response: Response,
 ):
-    updated_project = projects_service.patch_project(uow, project_id, patch)
+    updated_project = projects_admin_service.patch_project(uow, project_id, patch)
     response.headers["Location"] = f"/projects/{updated_project.id}"
     return updated_project
 
@@ -43,7 +67,7 @@ def patch_project(
 # delete project
 @router.delete("/{project_id}", status_code=status.HTTP_204_NO_CONTENT)
 def delete_project(uow: Annotated[UnitOfWork, Depends(get_uow)], project_id: int):
-    projects_service.delete_project(uow, project_id)
+    projects_admin_service.delete_project(uow, project_id)
 
 
 # publish project
@@ -51,6 +75,6 @@ def delete_project(uow: Annotated[UnitOfWork, Depends(get_uow)], project_id: int
 def publish_project(
     uow: Annotated[UnitOfWork, Depends(get_uow)], project_id: int, response: Response
 ):
-    published_project = projects_service.publish_project(uow, project_id)
+    published_project = projects_admin_service.publish_project(uow, project_id)
     response.headers["Location"] = f"/projects/{published_project.id}"
     return published_project
