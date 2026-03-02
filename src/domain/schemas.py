@@ -52,6 +52,8 @@ class ProjectDescOut(BaseModel):
     about: Optional[str] = None
     full_desc: Optional[str] = None
 
+    model_config = {"from_attributes": True}
+
 class StackOut(BaseModel):
     name: str
     model_config = {"from_attributes": True}
