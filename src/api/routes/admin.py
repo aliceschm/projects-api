@@ -36,9 +36,7 @@ def read_all_projects(
 
 
 # read project
-@router.get(
-    "/{project_id}", status_code=status.HTTP_200_OK, response_model=ProjectOut
-)
+@router.get("/{project_id}", status_code=status.HTTP_200_OK, response_model=ProjectOut)
 def read_project(
     uow: Annotated[UnitOfWork, Depends(get_uow)],
     project_id: int,

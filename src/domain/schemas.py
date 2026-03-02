@@ -54,9 +54,11 @@ class ProjectDescOut(BaseModel):
 
     model_config = {"from_attributes": True}
 
+
 class StackOut(BaseModel):
     name: str
     model_config = {"from_attributes": True}
+
 
 class ProjectOut(BaseModel):
     id: int

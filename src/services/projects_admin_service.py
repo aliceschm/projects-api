@@ -14,7 +14,7 @@ from src.domain.exceptions import (
     InvalidStatusError,
     ActionNotAllowedError,
     ProjectDescriptionNotFoundError,
-    EmptyPatchError
+    EmptyPatchError,
 )
 
 
@@ -40,7 +40,6 @@ def read_all_projects(uow, lang: Optional[str] = None) -> List[ProjectOut]:
 
     if not projects:
         raise ProjectNotFoundError("No projects found")
-    
 
     return [ProjectOut.model_validate(p) for p in projects]
 
@@ -54,11 +53,12 @@ def read_project_by_id(
 
     if not project:
         raise ProjectNotFoundError()
-    
+
     if lang is not None and not project.descriptions:
         raise ProjectDescriptionNotFoundError()
 
     return ProjectOut.model_validate(project)
+
 
 # Update project
 def patch_project(uow: UnitOfWork, project_id: int, patch: ProjectPatch) -> ProjectOut:
@@ -80,7 +80,6 @@ def patch_project(uow: UnitOfWork, project_id: int, patch: ProjectPatch) -> Proj
     if "status" in patch.model_fields_set:
         validate_status_not_published(patch.status)
         validate_status(patch.status)
-
 
     #  apply patch, repo will handle mapping and applying changes to the ORM model
     uow.projects.apply_patch(project, patch)

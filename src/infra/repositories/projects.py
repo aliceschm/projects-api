@@ -80,10 +80,14 @@ class ProjectsRepository:
     def list_projects_admin(self, lang: Optional[str] = None) -> list[models.Projects]:
         return self._list_projects(public=False, lang=lang)
 
-    def get_by_slug_public(self, slug: str, lang: Optional[str] = None) -> Optional[models.Projects]:
+    def get_by_slug_public(
+        self, slug: str, lang: Optional[str] = None
+    ) -> Optional[models.Projects]:
         return self._get_one(public=True, lang=lang, slug=slug)
 
-    def get_by_id_admin(self, project_id: int, lang: Optional[str] = None) -> Optional[models.Projects]:
+    def get_by_id_admin(
+        self, project_id: int, lang: Optional[str] = None
+    ) -> Optional[models.Projects]:
         return self._get_one(public=False, lang=lang, project_id=project_id)
 
     # =========================================================
@@ -103,9 +107,9 @@ class ProjectsRepository:
         if "stacks" in patch.model_fields_set:
             self.set_project_stacks(project, patch.stacks or [])
 
-        
-
-    def set_project_descriptions(self, project: models.Projects, patches: list[ProjectDescPatch]) -> None:
+    def set_project_descriptions(
+        self, project: models.Projects, patches: list[ProjectDescPatch]
+    ) -> None:
         """
         Updates/creates descriptions by lang.
         Assumes `project.descriptions` is already loaded (we selectinload it in reads).
@@ -133,7 +137,9 @@ class ProjectsRepository:
             if "full_desc" in p.model_fields_set:
                 db_desc.full_desc = p.full_desc
 
-    def set_project_stacks(self, project: models.Projects, stack_names: list[str]) -> None:
+    def set_project_stacks(
+        self, project: models.Projects, stack_names: list[str]
+    ) -> None:
         cleaned: list[str] = []
         seen: set[str] = set()
 
@@ -191,7 +197,9 @@ class ProjectsRepository:
 
         return q
 
-    def _list_projects(self, *, public: bool, lang: Optional[str]) -> list[models.Projects]:
+    def _list_projects(
+        self, *, public: bool, lang: Optional[str]
+    ) -> list[models.Projects]:
         return (
             self._query_projects(public=public, lang=lang)
             .order_by(models.Projects.deploy_date.desc())

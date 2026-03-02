@@ -4,10 +4,7 @@ from src.infra.uow import UnitOfWork
 from typing import List, Optional
 from src.domain.schemas import ProjectOut
 
-from src.domain.exceptions import (
-    ProjectNotFoundError,
-    ProjectDescriptionNotFoundError
-)
+from src.domain.exceptions import ProjectNotFoundError, ProjectDescriptionNotFoundError
 
 
 # Read projects
@@ -30,7 +27,7 @@ def read_project_by_slug(
 
     if not project:
         raise ProjectNotFoundError()
-    
+
     if lang is not None and not project.descriptions:
         raise ProjectDescriptionNotFoundError()
 

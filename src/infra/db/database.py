@@ -16,9 +16,11 @@ if not DATABASE_URL:
 
 # Create the SQLAlchemy engine
 # The engine is the core interface to the database, handling connections
-engine = create_engine(DATABASE_URL,
-                       pool_pre_ping=True, #test connections before using them 
-                       pool_recycle=1800,)   # recycle connections after 30 minutes to prevent timeouts
+engine = create_engine(
+    DATABASE_URL,
+    pool_pre_ping=True,  # test connections before using them
+    pool_recycle=1800,
+)  # recycle connections after 30 minutes to prevent timeouts
 
 # Create a configured "Session" class
 # SessionLocal will be used to create individual database sessions

@@ -15,14 +15,18 @@ REQUIRED_DESC_FIELDS = {"name", "about", "full_desc"}
 def validate_deploy_date(deploy_date: Optional[date]) -> None:
     if deploy_date is None:
         return
-    
+
     if deploy_date > date.today():
         raise InvalidDeployDateError()
 
 
-def validate_status(status: Optional[ProjectStatus]) -> None: # Pydantic will validate missing or invalid status, no exception handler neeed 
+def validate_status(
+    status: Optional[ProjectStatus],
+) -> (
+    None
+):  # Pydantic will validate missing or invalid status, no exception handler neeed
     if status is None:
-        return 
+        return
 
 
 def validate_project_publishable(project: ProjectOut) -> None:

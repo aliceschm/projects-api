@@ -2,7 +2,7 @@ from fastapi import FastAPI, Request
 from src.api.routes import admin, public
 from src.api.routes import health
 from fastapi.responses import JSONResponse
-from src.domain.exceptions import DomainError 
+from src.domain.exceptions import DomainError
 
 
 app = FastAPI()
@@ -29,6 +29,7 @@ async def domain_error_handler(request: Request, exc: DomainError):
         },
     )
 
+
 @app.exception_handler(Exception)
 async def generic_exception_handler(request: Request, exc: Exception):
     return JSONResponse(
@@ -36,7 +37,7 @@ async def generic_exception_handler(request: Request, exc: Exception):
         content={
             "error": {
                 "code": "internal_server_error",
-                "message": "An unexpected error occurred"
+                "message": "An unexpected error occurred",
             }
         },
     )

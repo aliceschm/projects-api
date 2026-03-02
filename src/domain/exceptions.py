@@ -29,6 +29,7 @@ class InvalidStatusError(DomainError):
     status_code = 422
     code = "invalid_status"
 
+
 class ProjectNotFoundError(DomainError):
     """Raised when a project with the specified ID does not exist."""
 
@@ -68,10 +69,10 @@ class SlugAlreadyExistsError(DomainError):
     status_code = 409
     code = "slug_already_exists"
 
+
 class ProjectDescriptionNotFoundError(DomainError):
     """Raised when a project description in the requested language is not found."""
 
     default_message = "Project description not found for the specified language"
     status_code = 404
     code = "project_description_not_found"
-
