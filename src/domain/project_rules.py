@@ -31,7 +31,7 @@ def validate_project_publishable(project: ProjectOut) -> None:
     if not project.deploy_date:
         errors.append("deploy_date is required for published projects")
 
-    if not project.stack_names:
+    if not project.stacks:
         errors.append("at least one stack is required for published projects")
 
     desc_by_lang = {d.lang: d for d in project.descriptions}
