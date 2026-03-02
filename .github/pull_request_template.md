@@ -1,11 +1,3 @@
----
-name: Pull Request
-about: Implement an Issue
-title: "type(scope): brief description"
----
-
-# Linked Issue
-Closes #
 
 # What this PR does
 <!-- Clear, objective description of the change -->
@@ -17,6 +9,9 @@ Closes #
 - 
 - 
 - 
+
+# Linked Issue
+Closes #
 
 ## Checklist
 - [ ] Meets the issue Success Criteria / DoD
