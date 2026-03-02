@@ -52,6 +52,9 @@ class ProjectDescOut(BaseModel):
     about: Optional[str] = None
     full_desc: Optional[str] = None
 
+class StackOut(BaseModel):
+    name: str
+    model_config = {"from_attributes": True}
 
 class ProjectOut(BaseModel):
     id: int
@@ -59,7 +62,7 @@ class ProjectOut(BaseModel):
     status: ProjectStatus
     deploy_date: Optional[date] = None
     descriptions: List[ProjectDescOut] = Field(default_factory=list)
-    stack_names: List[str] = Field(default_factory=list)
+    stacks: List[StackOut] = Field(default_factory=list)
 
     model_config = {"from_attributes": True}
 
