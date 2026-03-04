@@ -14,6 +14,9 @@ router = APIRouter(
     dependencies=[Depends(require_api_key)],
 )
 
+DEFAULT_LIMIT = 50
+MAX_LIMIT = 100
+
 
 # create project
 @router.post("/", status_code=status.HTTP_201_CREATED)
@@ -31,8 +34,10 @@ def create_project(
 def read_all_projects(
     uow: Annotated[UnitOfWork, Depends(get_uow)],
     lang: Annotated[ProjectLang | None, Query()] = None,
+    limit: int = Query(default=DEFAULT_LIMIT, ge=1, le=MAX_LIMIT),
+    offset: int = Query(default=0, ge=0),
 ):
-    return projects_admin_service.read_all_projects(uow, lang)
+    return projects_admin_service.read_all_projects(uow, lang, limit, offset)
 
 
 # read project

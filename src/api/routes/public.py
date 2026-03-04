@@ -11,6 +11,9 @@ from src.api.limiter import limiter
 
 router = APIRouter(prefix="/projects", tags=["Projects (Public)"])
 
+DEFAULT_LIMIT = 20
+MAX_LIMIT = 50
+
 
 @router.get("/", status_code=status.HTTP_200_OK, response_model=List[ProjectOut])
 @limiter.limit("30/minute")
@@ -18,8 +21,12 @@ def read_all_projects(
     request: Request,
     uow: Annotated[UnitOfWork, Depends(get_uow)],
     lang: Annotated[ProjectLang | None, Query()] = None,
+    limit: int = Query(default=DEFAULT_LIMIT, ge=1, le=MAX_LIMIT),
+    offset: int = Query(default=0, ge=0),
 ):
-    return projects_public_service.read_all_projects(uow, lang)
+    return projects_public_service.read_all_projects(
+        uow=uow, lang=lang, limit=limit, offset=offset
+    )
 
 
 @router.get(
