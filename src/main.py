@@ -9,7 +9,11 @@ from slowapi import _rate_limit_exceeded_handler
 from src.api.limiter import limiter
 
 
-app = FastAPI()
+app = FastAPI(
+    title="Projects API",
+    description="REST API for managing and exposing portfolio projects.",
+    version="1.0.0",
+)
 
 app.include_router(admin.router)
 app.include_router(public.router)

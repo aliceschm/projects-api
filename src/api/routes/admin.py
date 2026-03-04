@@ -30,12 +30,27 @@ def create_project(
     return new_project
 
 
-@router.get("/", status_code=status.HTTP_200_OK, response_model=List[ProjectOut])
+@router.get(
+    "/",
+    status_code=status.HTTP_200_OK,
+    response_model=List[ProjectOut],
+    summary="List projects",
+    description="Returns a list of all projects, including unpublished ones. Optional query parameters for pagination (limit, offset) and language-specific descriptions (lang).",
+)
 def read_all_projects(
     uow: Annotated[UnitOfWork, Depends(get_uow)],
     lang: Annotated[ProjectLang | None, Query()] = None,
-    limit: int = Query(default=DEFAULT_LIMIT, ge=1, le=MAX_LIMIT),
-    offset: int = Query(default=0, ge=0),
+    limit: int = Query(
+        default=DEFAULT_LIMIT,
+        ge=1,
+        le=MAX_LIMIT,
+        description="Maximum number of projects to return.",
+    ),
+    offset: int = Query(
+        default=0,
+        ge=0,
+        description="Number of projects to skip before starting to collect the result set (pagination).",
+    ),
 ):
     return projects_admin_service.read_all_projects(uow, lang, limit, offset)
 

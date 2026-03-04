@@ -15,14 +15,29 @@ DEFAULT_LIMIT = 20
 MAX_LIMIT = 50
 
 
-@router.get("/", status_code=status.HTTP_200_OK, response_model=List[ProjectOut])
+@router.get(
+    "/",
+    status_code=status.HTTP_200_OK,
+    response_model=List[ProjectOut],
+    summary="List published projects",
+    description="Returns a list of published projects. Optional query parameters for pagination (limit, offset) and language-specific descriptions (lang).",
+)
 @limiter.limit("30/minute")
 def read_all_projects(
     request: Request,
     uow: Annotated[UnitOfWork, Depends(get_uow)],
     lang: Annotated[ProjectLang | None, Query()] = None,
-    limit: int = Query(default=DEFAULT_LIMIT, ge=1, le=MAX_LIMIT),
-    offset: int = Query(default=0, ge=0),
+    limit: int = Query(
+        default=DEFAULT_LIMIT,
+        ge=1,
+        le=MAX_LIMIT,
+        description="Maximum number of projects to return.",
+    ),
+    offset: int = Query(
+        default=0,
+        ge=0,
+        description="Number of projects to skip before starting to collect the result set (pagination).",
+    ),
 ):
     return projects_public_service.read_all_projects(
         uow=uow, lang=lang, limit=limit, offset=offset
@@ -30,7 +45,11 @@ def read_all_projects(
 
 
 @router.get(
-    "/{project_slug}", status_code=status.HTTP_200_OK, response_model=ProjectOut
+    "/{project_slug}",
+    status_code=status.HTTP_200_OK,
+    response_model=ProjectOut,
+    summary="Get published project by slug",
+    description="Returns details of a published project identified by its slug. Optional query parameter for language-specific description (lang).",
 )
 @limiter.limit("30/minute")
 def read_project(
