@@ -14,6 +14,23 @@ router = APIRouter(prefix="/projects", tags=["Projects (Public)"])
 DEFAULT_LIMIT = 20
 MAX_LIMIT = 50
 
+Limit = Annotated[
+    int,
+    Query(
+        ge=1,
+        le=MAX_LIMIT,
+        description="Maximum number of projects to return.",
+    ),
+]
+
+Offset = Annotated[
+    int,
+    Query(
+        ge=0,
+        description="Number of projects to skip before starting to collect the result set (pagination).",
+    ),
+]
+
 
 @router.get(
     "/",
@@ -27,17 +44,8 @@ def read_all_projects(
     request: Request,
     uow: Annotated[UnitOfWork, Depends(get_uow)],
     lang: Annotated[ProjectLang | None, Query()] = None,
-    limit: int = Query(
-        default=DEFAULT_LIMIT,
-        ge=1,
-        le=MAX_LIMIT,
-        description="Maximum number of projects to return.",
-    ),
-    offset: int = Query(
-        default=0,
-        ge=0,
-        description="Number of projects to skip before starting to collect the result set (pagination).",
-    ),
+    limit: Limit = DEFAULT_LIMIT,
+    offset: Offset = 0,
 ):
     return projects_public_service.read_all_projects(
         uow=uow, lang=lang, limit=limit, offset=offset
