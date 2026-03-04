@@ -27,7 +27,7 @@ def create_app(include_admin: bool = False) -> FastAPI:
 
     @app.get("/")
     def root():
-        return {"message": "Welcome to my Projects API"}
+        return {"message": "Welcome to the Projects API", "docs": "/docs"}
 
     @app.exception_handler(DomainError)
     async def domain_error_handler(request: Request, exc: DomainError):
