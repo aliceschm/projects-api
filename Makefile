@@ -2,7 +2,7 @@
 
 # Run API for development with prod DB
 dev:
-	uvicorn src.main:app --reload
+	uvicorn src.app_admin:app --reload
 
 # Run API for development with test DB
 api-test:

@@ -8,9 +8,11 @@ from src.domain.exceptions import ProjectNotFoundError, ProjectDescriptionNotFou
 
 
 # Read projects
-def read_all_projects(uow, lang: Optional[str] = None) -> List[ProjectOut]:
+def read_all_projects(
+    uow, lang: Optional[str] = None, limit: int = 50, offset: int = 0
+) -> List[ProjectOut]:
     """Returns list of projects. If lang is provided, returns desc in that language (if exists)."""
-    projects = uow.projects.list_projects_public(lang=lang)
+    projects = uow.projects.list_projects_public(lang=lang, limit=limit, offset=offset)
 
     if not projects:
         raise ProjectNotFoundError("No projects found")

@@ -74,11 +74,15 @@ class ProjectsRepository:
     # READS (return ORM only)
     # =========================================================
 
-    def list_projects_public(self, lang: Optional[str] = None) -> list[models.Projects]:
-        return self._list_projects(public=True, lang=lang)
+    def list_projects_public(
+        self, lang: Optional[str] = None, limit: int = 50, offset: int = 0
+    ) -> list[models.Projects]:
+        return self._list_projects(public=True, lang=lang, limit=limit, offset=offset)
 
-    def list_projects_admin(self, lang: Optional[str] = None) -> list[models.Projects]:
-        return self._list_projects(public=False, lang=lang)
+    def list_projects_admin(
+        self, lang: Optional[str] = None, limit: int = 50, offset: int = 0
+    ) -> list[models.Projects]:
+        return self._list_projects(public=False, lang=lang, limit=limit, offset=offset)
 
     def get_by_slug_public(
         self, slug: str, lang: Optional[str] = None
@@ -198,11 +202,13 @@ class ProjectsRepository:
         return q
 
     def _list_projects(
-        self, *, public: bool, lang: Optional[str]
+        self, *, public: bool, lang: Optional[str], limit: int = 50, offset: int = 0
     ) -> list[models.Projects]:
         return (
             self._query_projects(public=public, lang=lang)
             .order_by(models.Projects.deploy_date.desc())
+            .limit(limit)
+            .offset(offset)
             .all()
         )
 

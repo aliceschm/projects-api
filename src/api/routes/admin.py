@@ -14,6 +14,9 @@ router = APIRouter(
     dependencies=[Depends(require_api_key)],
 )
 
+DEFAULT_LIMIT = 50
+MAX_LIMIT = 100
+
 
 # create project
 @router.post("/", status_code=status.HTTP_201_CREATED)
@@ -27,12 +30,35 @@ def create_project(
     return new_project
 
 
-@router.get("/", status_code=status.HTTP_200_OK, response_model=List[ProjectOut])
+@router.get(
+    "/",
+    status_code=status.HTTP_200_OK,
+    response_model=List[ProjectOut],
+    summary="List projects",
+    description="Returns a list of all projects, including unpublished ones. Optional query parameters for pagination (limit, offset) and language-specific descriptions (lang).",
+)
 def read_all_projects(
     uow: Annotated[UnitOfWork, Depends(get_uow)],
-    lang: ProjectLang | None = Query(default=None),
+    lang: Annotated[ProjectLang | None, Query()] = None,
+    limit: Annotated[
+        int,
+        Query(
+            default=DEFAULT_LIMIT,
+            ge=1,
+            le=MAX_LIMIT,
+            description="Maximum number of projects to return.",
+        ),
+    ] = DEFAULT_LIMIT,
+    offset: Annotated[
+        int,
+        Query(
+            default=0,
+            ge=0,
+            description="Number of projects to skip before starting to collect the result set (pagination).",
+        ),
+    ] = 0,
 ):
-    return projects_admin_service.read_all_projects(uow, lang)
+    return projects_admin_service.read_all_projects(uow, lang, limit, offset)
 
 
 # read project
@@ -40,7 +66,7 @@ def read_all_projects(
 def read_project(
     uow: Annotated[UnitOfWork, Depends(get_uow)],
     project_id: int,
-    lang: ProjectLang | None = Query(default=None),
+    lang: Annotated[ProjectLang | None, Query()] = None,
 ):
     return projects_admin_service.read_project_by_id(
         uow=uow,
