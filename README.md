@@ -24,8 +24,8 @@ This separation allows domain logic to be tested independently from the web fram
 - CRUD operations for projects
 - Public endpoints for retrieving published portfolio projects
 - API Key authentication for protected routes
-- Domain-focused tests using **pytest**
-- Docker image and **Dev Containers** for reproducible environments
+- Domain-focused tests using pytest
+- Docker image and Dev Containers for reproducible environments
 - Continuous integration with code quality and security checks
 
 ---
@@ -52,8 +52,8 @@ The final goal of this project is to provide a complete backend for managing and
 
 The system will support:
 
-- A **public API** used by the portfolio website to display projects
-- An **admin dashboard** for managing project data
+- A public API used by the portfolio website to display projects
+- An admin dashboard for managing project data
 - Secure authentication for administrative operations
 - Automated workflows for maintaining project content
 
