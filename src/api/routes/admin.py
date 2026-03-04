@@ -40,7 +40,7 @@ def read_all_projects(
 def read_project(
     uow: Annotated[UnitOfWork, Depends(get_uow)],
     project_id: int,
-    lang: ProjectLang | None = Query(default=None),
+    lang: Annotated[ProjectLang | None, Query()] = None,
 ):
     return projects_admin_service.read_project_by_id(
         uow=uow,
