@@ -4,6 +4,7 @@ from src.main import app
 
 client = TestClient(app)
 
+
 @pytest.mark.integration
 def test_health():
     response = client.get("/health")
