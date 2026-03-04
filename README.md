@@ -6,6 +6,28 @@ The system provides a backend for storing project metadata, exposing public endp
 
 ---
 
+## Live API
+
+**Base URL**  
+https://projects-api-production-f245.up.railway.app
+
+**Swagger UI**  
+https://projects-api-production-f245.up.railway.app/docs
+
+**Public endpoint**
+GET /projects/
+
+Optional query parameters:
+
+- `lang` – filter project descriptions by language
+- `limit` – number of projects to return
+- `offset` – number of projects to skip (pagination)
+
+Example:
+https://projects-api-production-f245.up.railway.app/projects/?lang=en&limit=2&offset=0
+
+---
+
 ## Architecture
 
 The application follows a layered structure:
@@ -23,7 +45,9 @@ This separation allows domain logic to be tested independently from the web fram
 
 - CRUD operations for projects
 - Public endpoints for retrieving published portfolio projects
-- API Key authentication for protected routes
+- Language filtering (`lang`)
+- Pagination (`limit`, `offset`)
+- Rate limiting on public endpoints
 - Domain-focused tests using pytest
 - Docker image and Dev Containers for reproducible environments
 - Continuous integration with code quality and security checks
@@ -51,14 +75,11 @@ This separation allows domain logic to be tested independently from the web fram
 
 ## Project Vision
 
-The final goal of this project is to provide a complete backend for managing and publishing portfolio projects.
+The goal of this project is to provide a structured backend for managing and publishing portfolio projects.
 
-The system will support:
+The API acts as the data source for a portfolio website while also serving as an internal tool for managing project information.
 
-- A public API used by the portfolio website to display projects
-- An admin dashboard for managing project data
-- Secure authentication for administrative operations
-- Automated workflows for maintaining project content
+Future iterations may expand the system with additional capabilities such as authentication, media management, and optional administrative tooling.
 
 ---
 
@@ -66,9 +87,9 @@ The system will support:
 
 | Phase | Scope | Status |
 |------|------|------|
-| 1. Core API | CRUD operations, service layer, repository pattern, UoW | ✅ Implemented |
+| 1. Core API | CRUD operations, service layer, repository pattern, Unit of Work | ✅ Implemented |
 | 2. Public Portfolio API | Endpoints exposing published projects | ✅ Implemented |
-| 3. Security Hardening | Rate limiting and stronger API protection | 🔄 Planned |
-| 4. Authentication | JWT authentication for admin dashboard | ⏳ Planned |
-| 5. Admin Dashboard | Interface for managing portfolio projects | ⏳ Planned |
+| 3. API Hardening | Rate limiting and pagination | ✅ Implemented |
+| 4. Project Media | Support for project images and galleries | ⏳ Planned |
+| 5. Authentication | JWT authentication for admin routes | ⏳ Planned |
 | 6. Test Expansion | Broader automated test coverage | ⏳ Planned |
