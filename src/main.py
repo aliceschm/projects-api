@@ -3,6 +3,10 @@ from src.api.routes import admin, public
 from src.api.routes import health
 from fastapi.responses import JSONResponse
 from src.domain.exceptions import DomainError
+from slowapi.errors import RateLimitExceeded
+from slowapi.middleware import SlowAPIMiddleware
+from slowapi import _rate_limit_exceeded_handler
+from src.api.limiter import limiter
 
 
 app = FastAPI()
@@ -10,6 +14,10 @@ app = FastAPI()
 app.include_router(admin.router)
 app.include_router(public.router)
 app.include_router(health.router)
+
+app.state.limiter = limiter
+app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
+app.add_middleware(SlowAPIMiddleware)
 
 
 @app.get("/")
