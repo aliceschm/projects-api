@@ -32,17 +32,20 @@ This separation allows domain logic to be tested independently from the web fram
 
 ## Tech Stack
 
-- Python
-- FastAPI
-- PostgreSQL
-- SQLAlchemy
-- Pydantic
-- Pytest
-- Docker
-- Ruff
-- Bandit
-- SonarCloud
-- GitHub Actions
+| Category | Technology |
+|--------|--------|
+| Language | Python |
+| Framework | FastAPI |
+| Database | PostgreSQL |
+| ORM | SQLAlchemy |
+| Validation | Pydantic |
+| Testing | Pytest |
+| Containerization | Docker |
+| Linting | Ruff |
+| Security checks | Bandit |
+| Code quality | SonarCloud |
+| CI/CD | GitHub Actions |
+| Deployment | Railway |
 
 ---
 
