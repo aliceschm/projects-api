@@ -35,7 +35,7 @@ def read_all_projects(
             le=MAX_LIMIT,
             description="Maximum number of projects to return.",
         ),
-    ] = DEFAULT_LIMIT,  
+    ] = DEFAULT_LIMIT,
     offset: Annotated[
         int,
         Query(
