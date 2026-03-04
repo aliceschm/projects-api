@@ -27,17 +27,23 @@ def read_all_projects(
     request: Request,
     uow: Annotated[UnitOfWork, Depends(get_uow)],
     lang: Annotated[ProjectLang | None, Query()] = None,
-    limit: int = Query(
-        default=DEFAULT_LIMIT,
-        ge=1,
-        le=MAX_LIMIT,
-        description="Maximum number of projects to return.",
-    ),
-    offset: int = Query(
-        default=0,
-        ge=0,
-        description="Number of projects to skip before starting to collect the result set (pagination).",
-    ),
+    limit: Annotated[
+        int,
+        Query(
+            default=DEFAULT_LIMIT,
+            ge=1,
+            le=MAX_LIMIT,
+            description="Maximum number of projects to return.",
+        ),
+    ] = DEFAULT_LIMIT,  
+    offset: Annotated[
+        int,
+        Query(
+            default=0,
+            ge=0,
+            description="Number of projects to skip before starting to collect the result set (pagination).",
+        ),
+    ] = 0,
 ):
     return projects_public_service.read_all_projects(
         uow=uow, lang=lang, limit=limit, offset=offset
