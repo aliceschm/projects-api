@@ -17,7 +17,7 @@ router = APIRouter(prefix="/projects", tags=["Projects (Public)"])
 def read_all_projects(
     request: Request,
     uow: Annotated[UnitOfWork, Depends(get_uow)],
-    lang: ProjectLang | None = Query(default=None),
+    lang: Annotated[ProjectLang | None, Query()] = None,
 ):
     return projects_public_service.read_all_projects(uow, lang)
 
@@ -30,7 +30,7 @@ def read_project(
     request: Request,
     uow: Annotated[UnitOfWork, Depends(get_uow)],
     project_slug: str,
-    lang: ProjectLang | None = Query(default=None),
+    lang: Annotated[ProjectLang | None, Query()] = None,
 ):
     return projects_public_service.read_project_by_slug(
         uow=uow,

@@ -30,7 +30,7 @@ def create_project(
 @router.get("/", status_code=status.HTTP_200_OK, response_model=List[ProjectOut])
 def read_all_projects(
     uow: Annotated[UnitOfWork, Depends(get_uow)],
-    lang: ProjectLang | None = Query(default=None),
+    lang: Annotated[ProjectLang | None, Query()] = None,
 ):
     return projects_admin_service.read_all_projects(uow, lang)
 
