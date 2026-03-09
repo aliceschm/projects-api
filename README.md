@@ -57,17 +57,15 @@ This separation allows domain logic to be tested independently from the web fram
 ## Tech Stack
 
 | Category | Technology |
-|--------|--------|
+|---|---|
 | Language | Python |
 | Framework | FastAPI |
 | Database | PostgreSQL |
-| ORM | SQLAlchemy |
+| ORM & Migrations | SQLAlchemy, Alembic |
 | Validation | Pydantic |
 | Testing | Pytest |
 | Containerization | Docker |
-| Linting | Ruff |
-| Security checks | Bandit |
-| Code quality | SonarCloud |
+| Code Quality & Security | Ruff, Bandit, SonarCloud |
 | CI/CD | GitHub Actions |
 | Deployment | Railway |
 
