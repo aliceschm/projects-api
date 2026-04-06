@@ -1,32 +1,21 @@
 # Projects API
 
-REST API designed to manage and expose software projects for a personal portfolio.
+REST API built as a backend engineering study project, focused on clean architecture, domain rules, and layered design.
 
-The system provides a backend for storing project metadata, exposing public endpoints used by the portfolio website, and supporting future administrative tooling.
+Originally created as a backend for a portfolio website, this project evolved into a standalone system to explore backend structure, validation, and application design.
 
----
+## Overview
 
-## Live API
+This API manages software project data and exposes endpoints for retrieving and maintaining project information.
 
-**Base URL**  
-https://projects-api-production-f245.up.railway.app
+The focus is to demonstrate:
 
-**Swagger UI**  
-https://projects-api-production-f245.up.railway.app/docs
-
-**Public endpoint**
-GET /projects/
-
-Optional query parameters:
-
-- `lang` – filter project descriptions by language
-- `limit` – number of projects to return
-- `offset` – number of projects to skip (pagination)
-
-Example:
-https://projects-api-production-f245.up.railway.app/projects/?lang=en&limit=2&offset=0
+- clear separation of responsibilities  
+- domain logic independent from frameworks  
+- structured backend architecture  
 
 ---
+
 
 ## Architecture
 
@@ -53,6 +42,60 @@ This separation allows domain logic to be tested independently from the web fram
 - Continuous integration with code quality and security checks
 
 ---
+## Endpoints
+
+### Public Endpoints
+
+**GET /projects/**  
+List published projects.
+
+Optional query parameters:
+- `lang`
+- `limit`
+- `offset`
+
+**GET /projects/{project_slug}**  
+Retrieve a published project by slug.
+
+Optional query parameters:
+- `lang`
+
+### Admin Endpoints
+
+All admin routes require authentication via API key.
+
+**POST /admin/projects/**  
+Create a new project.
+
+**GET /admin/projects/**  
+List all projects, including unpublished ones.
+
+Optional query parameters:
+- `lang`
+- `limit`
+- `offset`
+
+**GET /admin/projects/{project_id}**  
+Retrieve a project by id.
+
+Optional query parameters:
+- `lang`
+
+**PATCH /admin/projects/{project_id}**  
+Partially update a project.
+
+**DELETE /admin/projects/{project_id}**  
+Delete a project.
+
+**POST /admin/projects/{project_id}/publish**  
+Publish a project.
+
+### Health Check
+
+**GET /health**  
+Returns application status.
+
+---
 
 ## Tech Stack
 
@@ -70,24 +113,15 @@ This separation allows domain logic to be tested independently from the web fram
 | Deployment | Railway |
 
 ---
-
-## Project Vision
-
-The goal of this project is to provide a structured backend for managing and publishing portfolio projects.
-
-The API acts as the data source for a portfolio website while also serving as an internal tool for managing project information.
-
-Future iterations may expand the system with additional capabilities such as authentication, media management, and optional administrative tooling.
-
----
-
 ## Roadmap
 
 | Phase | Scope | Status |
 |------|------|------|
-| 1. Core API | CRUD operations, service layer, repository pattern, Unit of Work | ✅ Implemented |
-| 2. Public Portfolio API | Endpoints exposing published projects | ✅ Implemented |
-| 3. API Hardening | Rate limiting and pagination | ✅ Implemented |
-| 4. Project Media | Support for project images and galleries | ⏳ Planned |
-| 5. Authentication | JWT authentication for admin routes | ⏳ Planned |
-| 6. Test Expansion | Broader automated test coverage | ⏳ Planned |
+| 1. Core API | CRUD, layering, Unit of Work | ✅ |
+| 2. Public API | Filtering, pagination | ✅ |
+| 3. Hardening | Rate limiting, validation | ✅ |
+| 4. Configuration | Environment validation (Pydantic) | ⏳ |
+| 5. Containerization | Docker setup | ✅ |
+| 6. Production Setup | Nginx + Compose | ⏳ |
+| 7. Observability | Logging improvements | ⏳ |
+| 8. Security | Environment and API hardening | ⏳ |
