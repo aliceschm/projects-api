@@ -116,12 +116,16 @@ Returns application status.
 ## Roadmap
 
 | Phase | Scope | Status |
-|------|------|------|
-| 1. Core API | CRUD, layering, Unit of Work | ✅ |
-| 2. Public API | Filtering, pagination | ✅ |
-| 3. Hardening | Rate limiting, validation | ✅ |
-| 4. Configuration | Environment validation (Pydantic) | ⏳ |
-| 5. Containerization | Docker setup | ✅ |
-| 6. Production Setup | Nginx + Compose | ⏳ |
-| 7. Observability | Logging improvements | ⏳ |
-| 8. Security | Environment and API hardening | ⏳ |
+|------|------|--------|
+| 1. Core API | CRUD, layering, Unit of Work | Done |
+| 2. Public API | Filtering, pagination | Done |
+| 3. Hardening | Rate limiting, validation | Done |
+| 4. Configuration | Environment validation (Pydantic) | In Progress |
+| 5. Containerization | Docker setup | Done |
+| 6. Production Setup | Nginx + Compose | Planned |
+| 7. Observability | Logging improvements | Planned |
+| 8. Security | Environment and API hardening | Planned |
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](./LICENSE) file for details.
