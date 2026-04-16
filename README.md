@@ -110,7 +110,6 @@ Returns application status.
 | Containerization | Docker |
 | Code Quality & Security | Ruff, Bandit, SonarCloud |
 | CI/CD | GitHub Actions |
-| Deployment | Railway |
 
 ---
 ## Roadmap
